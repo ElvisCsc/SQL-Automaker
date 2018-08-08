@@ -18,29 +18,28 @@
 
 
         <%
-            
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sqlautomark.mysql.database.azure.com:3306/sqlautomarker?verifyServerCertificate=true&useSSL=true&requireSSL=true", "mltzac001@sqlautomark", "SQLauto2018");
-            
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sqlautomarker.cdtrwjzldbjr.us-east-1.rds.amazonaws.com:3306/?user=mltzac001", "mltzac001", "SQLauto2018");
+
             Statement stmt = conn.createStatement();
-            
+
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            String sql = "select * from users where studentNumber = '" + username + "';";
+            String sql = "INSERT INTO `sqlautomarker`.`Users` (`StudentNumber`, `Password`) VALUES ('MLTZAC001', '123456');";
 
 //
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.next();
-            
-            String site = new String("http://www.photofuntoos.com");
-         response.setStatus(response.SC_MOVED_TEMPORARILY);
-         response.setHeader("Location", site); 
-           // System.out.println("YES");
-          //  System.out.println(username);
-            //System.out.println(password);
-response.sendRedirect("/teacher_portal.html");
+            stmt.executeUpdate(sql);
+            //rs.next();
 
-%>
+            String site = new String("http://www.photofuntoos.com");
+            // response.setStatus(response.SC_MOVED_TEMPORARILY);
+            // response.setHeader("Location", site); 
+            // System.out.println("YES");
+            //  System.out.println(username);
+            //System.out.println(password);
+            response.sendRedirect("/teacher_portal.html");
+
+        %>
 
     </body>
 </html>
