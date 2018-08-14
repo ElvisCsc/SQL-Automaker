@@ -22,13 +22,39 @@
 
             Connection connection = new SQL().getConnection();
             Statement stmt = connection.createStatement();
-
+Statement stmt2 = connection.createStatement();
+            
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            //String sql = "INSERT INTO `sqlautomarker`.`Users` (`StudentNumber`, `Password`) VALUES ('"+username+"', '123456');";
-
-//
-          // stmt.executeUpdate(sql);
+            
+            
+            String sql = "SELECT * FROM sqlautomarker.Users WHERE UserID='"+username+"';";
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            
+            String sql2 = "SELECT Password FROM sqlautomarker.Password where UserID='"+username+"';";
+            ResultSet rs2 = stmt2.executeQuery(sql2);
+            
+            while(rs.next()&&rs2.next())
+            {
+                if (rs2.getString("Password").equals(password))
+                    {
+                        System.out.println("match");
+                        if (rs.getString("Role").equals("Lecturer"))
+                            {
+                                 response.sendRedirect("\\teacherPortal.jsp");
+                                 
+                            }
+                        if (rs.getString("Role").equals("Student"))
+                            {
+                                
+                            }
+                    }
+                else
+                {
+                    System.out.println("no match");
+                }
+            }
             //rs.next();
 
             
@@ -37,7 +63,7 @@
             // System.out.println("YES");
             //  System.out.println(username);
             //System.out.println(password);
-            response.sendRedirect("\\teacher_portal.jsp");
+           
 
         %>
 

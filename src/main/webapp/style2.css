@@ -266,8 +266,9 @@ table#t01 th {
     box-sizing: border-box;
 }
 body {
-    font: 14px/1 Arial, sans-serif;
+    font: 14px/1 Verdana;
 }
+
 table {
     border-collapse: collapse;
     background: white;
@@ -352,4 +353,33 @@ th, td {
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+}
+.title#title01 {
+    font: Verdana;
+    align-content: center;
+}
+
+/* Style the buttons inside the tab */
+.submit#s01 {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.button#b1 {
+    background-color: #cfb87c;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 }

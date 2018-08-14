@@ -109,20 +109,32 @@
 
                                 <div id="Student Overview" class="tabcontent">
                                     <h3>Student Overview </h3> 
-                                    <button onclick=""target="_blank">Refresh</button>
-                                            <%
-                                                Connection connection = new SQL().getConnection();
+                                    <a  href="JavaScript:newPopup('/javascript/examples/sample_popup.cfm');" target="popup" >Refresh</a>
+                                    <br><br>
+                                    <form  action="">
+                                        <input  id="s01" type="submit" value="View Students" />
+                                    </form>
+                                    <br><br>
+                                    <form action="">
+                                        <input type="submit" value="Add Students" />
+                                    </form>
+                                    <br><br>
+                                    <form action="">
+                                        <input type="submit" value="Remove Students" />
+                                    </form>
+                                    <%
+                                        Connection connection = new SQL().getConnection();
 
-                                                Statement statement = connection.createStatement();
+                                        Statement statement = connection.createStatement();
 
-                                                // String command = "INSERT INTO Employees (ID, Name) VALUES (1, 'Joe')";
-                                                // statement.executeUpdate(command);
-                                                //command = "INSERT INTO Employees (ID, Name) VALUES (2, 'Yin')";
-                                                //statement.executeUpdate(command);
-                                                ResultSet resultset
-                                                        = statement.executeQuery("SELECT * FROM sqlautomarker.Users;");
+                                        // String command = "INSERT INTO Employees (ID, Name) VALUES (1, 'Joe')";
+                                        // statement.executeUpdate(command);
+                                        //command = "INSERT INTO Employees (ID, Name) VALUES (2, 'Yin')";
+                                        //statement.executeUpdate(command);
+                                        ResultSet resultset
+                                                = statement.executeQuery("SELECT * FROM sqlautomarker.Users;");
 
-                                            %>
+                                    %>
 
                                     <div class="pane pane--table1">
                                         <div class="pane-hScroll">
@@ -142,7 +154,7 @@
                                                         %>
                                                         <TR>
                                                             <TD> <%= resultset.getString("Name")%> </TD>
-                                                            <TD> <%= resultset.getString("User ID")%> </TD>
+                                                            <TD> <%= resultset.getString("UserID")%> </TD>
                                                             <TD> <%= resultset.getString("Role")%> </TD>
                                                         </TR>
 
@@ -194,6 +206,13 @@
                                         document.getElementById(TabName).style.display = "block";
                                         evt.currentTarget.className += " active";
                                     }
+
+                                    function newPopup(url)
+                                    {
+                                        popupWindow = window.open(
+                                                "viewStudents.jsp", 'popUpWindow', 'height=700,width=600,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
+                                    }
+
 
                                 </script>
 

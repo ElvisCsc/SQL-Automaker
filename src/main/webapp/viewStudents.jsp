@@ -66,14 +66,13 @@
                                     <tbody>
 
                                         <TR>
-                                            <TD> <h3>Student Overview </h3> </TD>
-                                            <TD>  </TD>
-                                            <TD> <a><href action="">Refresh</href>></a>> </TD>
+
+                                            <TD> <button onclick="">Refresh</button> </TD>
                                         </TR>
 
                                     </tbody>
                                 </table>
-
+                                <br><br>
                                 <%
                                     Connection connection = new SQL().getConnection();
 
@@ -103,7 +102,7 @@
                                                     %>
                                                     <TR>
                                                         <TD> <%= resultset.getString("Name")%> </TD>
-                                                        <TD> <%= resultset.getString("User ID")%> </TD>
+                                                        <TD> <%= resultset.getString("UserID")%> </TD>
                                                         <TD> <%= resultset.getString("Role")%> </TD>
                                                     </TR>
 
