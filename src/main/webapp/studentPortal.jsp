@@ -33,10 +33,9 @@
                     <%
 
                         String user = request.getAttribute("name").toString();
-                        request.setAttribute("user", user);
-                        
                     %>
-                    <h2 id="title01">Student Portal - <%=user%></h2>
+                    <h2 id="title01">Student Portal</h2></br>
+                    <h3 id="username" name="username"><%=user%></h3>
                     <br><br>
 
                     <h8 id="title01">Assessments</h8>
@@ -81,7 +80,7 @@
                             <td><%=end%></td>
                             <td><%=questions%></td>
                             <td><%=marks%></td>
-                            <td><a id="ref-<%=name%> "  href="JavaScript:newTab();">Begin</a></td>
+                            <td><a id="ref-<%=name%> "  href="JavaScript:newTab('<%=name%>', '<%=user%>');">Begin</a></td>
                         </tr>
                         <%
                             }
@@ -94,9 +93,11 @@
 
 
                     <script>
-                        function newTab()
+                        function newTab(name, user)
                         {
-                            popupWindow = window.open("studentAnswers.jsp");
+                            var url = "studentAnswers.jsp?assessment=" + name+"&user="+user;
+                            popupWindow = window.open(url);
+                            
                         }
                     </script>
 
