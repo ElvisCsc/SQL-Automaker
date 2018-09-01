@@ -23,19 +23,12 @@
     </head>
     <%   try
         {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://sqlautomarker.cdtrwjzldbjr.us-east-1.rds.amazonaws.com:3306/?user=mltzac001", "mltzac001", "SQLauto2018");
+            Connection connection = new SQL().getConnection();
             Statement statement = connection.createStatement();
 
             statement.addBatch("use `preloaded-option-1`;");
             statement.executeBatch();
-            ResultSet resultset = statement.executeQuery("SELECT * FROM questions where questions.questionNumber=1;");
-
-            while (resultset.next())
-            {
-                System.out.println(resultset.getString("question"));
-            }
-
-        }
+                   }
         catch (Exception e)
         {
             System.out.println(e);

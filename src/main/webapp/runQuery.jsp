@@ -48,17 +48,18 @@
 
                         try
                         {
+                  
                             ResultSet rs = statement.executeQuery(decodedString);
                             ResultSetMetaData rsm = rs.getMetaData();
 
                             int columnsNumber = rsm.getColumnCount();
                             ArrayList<String> col = new ArrayList<String>();
 
-                    %><table style="table-layout: auto; width: 100%;">
+                    %><table style="table-layout: fixed; width: 100%;">
 
                         <%for (int i = 1; i < columnsNumber + 1; i++)
                             {
-                                String st = rsm.getColumnName(i);
+                                String st = rsm.getColumnLabel(i);
                                 col.add(st);
                         %>
                         <th style="font-size: 10px"> <%=st%></th>
@@ -81,8 +82,9 @@
                         }
                         catch (SQLException e)
                         {
+                            System.out.println(e);
                         %>
-                    <h1>SQL Error</h1>
+                        <h1 style="text-align: center">SQL Error</h1>
                     <%
                         }
                     %>

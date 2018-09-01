@@ -23,6 +23,7 @@ public class CreateStudents
 
     public CreateStudents(File students)
     {
+
         this.students = students;
         this.connection = new SQL().getConnection();
         this.users = new ArrayList<User>();
@@ -39,10 +40,10 @@ public class CreateStudents
             String sql = "";
             for (User user : users)
             {
-                sql = "INSERT INTO `sqlautomarker`.`Users` (`User ID`, `Name`, `Role`) VALUES ('" + user.getUserID() +"', '" + user.getName() + "', '" + user.getRole() + "');";
-                stmt.executeUpdate(sql);
-                stmt = connection.createStatement();
+                sql = "INSERT INTO `sqlautomarker`.`Users` (`UserID`, `Name`, `Role`) VALUES ('" + user.getUserID() +"', '" + user.getName() + "', '" + user.getRole() + "');";
+                stmt.addBatch(sql);
             }
+            stmt.executeBatch();
             stmt.close();
         }
         catch (Exception e)
@@ -73,6 +74,11 @@ public class CreateStudents
                 users.add(u);
 
                 s = f.readLine();
+            }
+            
+            for (User user : users)
+            {
+                System.out.println(user.toString());
             }
             addToDatabase();
         }

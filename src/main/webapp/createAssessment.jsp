@@ -20,7 +20,7 @@
         <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
 
     </head>
-    <body>
+    <body onload="begin()">
         <div class="container"> 
             <section id="fancyTabWidget" class="tabs t-tabs">
 
@@ -74,6 +74,10 @@
                                         </select>
                                     </td> 
                                 </tr>
+                                <tr>
+                                    <td>Attempts</td>
+                                    <td><INPUT class="cat" id="attempts" name="attempts" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
+                                </tr>
                             </table>
                             <br><br>     
                             <table id="t01">
@@ -83,31 +87,31 @@
                                 </tr>
                                 <tr>
                                     <td>Category A: SIMPLE QUERIES      (2 Marks)</td>
-                                    <td><INPUT class="cat" id="catA" name="catA" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catA" name="catA" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td>Category B: WHERE CONDITIONS      (2 Marks)</td>
-                                    <td><INPUT class="cat" id="catB" name="catB" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catB" name="catB" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td>Category C: ORDER BY      (3 Marks)</td>
-                                    <td><INPUT class="cat" id="catC" name="catC" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catC" name="catC" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td>Category D: GROUP BY & HAVING      (3 Marks)</td>
-                                    <td><INPUT class="cat" id="catD" name="catD" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catD" name="catD" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td>Category E: SUB-QUERIES      (4 Marks)</td>
-                                    <td><INPUT class="cat" id="catE" name="catE" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catE" name="catE" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td>Category F: SUB-QUERY OPERATORS (ALL, ANY, SOME, EXISTS)       (4 Marks)</td>
-                                    <td><INPUT class="cat" id="catF" name="catF" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catF" name="catF" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td>Category G: JOINS      (5 Marks)</td>
-                                    <td><INPUT class="cat" id="catG" name="catG" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="6" onchange="update()"></input></td> 
+                                    <td><INPUT class="cat" id="catG" name="catG" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()"></input></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -125,7 +129,7 @@
                             <table id="t01">
                                 <tr>                          
                                     <td>Start date (YYYY/MM/DD):</td>
-                                    <td><input type="date" id="startDate" name="startDate" min="2018-01-01"></td> 
+                                    <td><input type="date" id="startDate" name="startDate" ></td> 
                                 </tr>
                                 <tr>                          
                                     <td>Start time:</td>
@@ -133,7 +137,7 @@
                                 </tr>
                                 <tr>                          
                                     <td>End date (YYYY/MM/DD):</td>
-                                    <td><input type="date" id="endDate" name="endDate" min="2018-01-01"></td> 
+                                    <td><input type="date" id="endDate" name="endDate"></td> 
                                 </tr>
                                 <tr>                          
                                     <td>End time:</td>
@@ -152,10 +156,32 @@
     <script>
 
 
+        function begin()
+        {
+            var now = new Date();
+
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            //    var tomorrow = now.getFullYear() + "-" + (month) + "-" + (day + 1);
+
+
+
+            document.getElementById("startDate").value = today;
+            document.getElementById("startTime").value = '00:00';
+
+            document.getElementById("endDate").value = today;
+            document.getElementById("endTime").value = '00:00';
+
+
+
+            update();
+        }
         function update()
         {
             var tot, cats, catA, catB, catC, catD, catE, catF, catG, label,
-                    totMarks, marksA, marksB, marksC, marksD, marksE, marksF, marksG, labelMarks;
+                    totMarks, marksA, marksB, marksC, marksD, marksE, marksF, marksG, attempts, labelMarks;
             label = document.getElementById("numQuestions");
             cats = document.getElementsByClassName("cat");
             labelMarks = document.getElementById("totMarks");
@@ -173,6 +199,8 @@
             catF = document.getElementById("catF").valueOf();
 
             catG = document.getElementById("catG").valueOf();
+
+            attempts = document.getElementById("attempts").valueOf();
 
             tot = Number(catA.value) + Number(catB.value) + Number(catC.value) + Number(catD.value) + Number(catE.value) + Number(catF.value) + Number(catG.value);
             label.value = tot.valueOf();

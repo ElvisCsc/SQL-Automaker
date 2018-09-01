@@ -43,16 +43,7 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure</artifactId>
-            <version>1.14.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>6.4.0.jre8</version>
-        </dependency>
+      
  
         <dependency>
             <groupId>commons-net</groupId>
@@ -67,19 +58,7 @@
 
     </dependencies>
     
-    <repositories>
-        <repository>
-            <id>ossrh</id>
-            <name>Sonatype Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
+   
     <build>
         <plugins>
             <plugin>
@@ -128,6 +107,28 @@
                 </executions>
             </plugin>
         </plugins>
+        
+        <extensions>
+            <extension>
+                <groupId>org.kuali.maven.wagons</groupId>
+                <artifactId>maven-s3-wagon</artifactId>
+                <version>1.2.1</version>
+            </extension>
+        </extensions>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>repo.sqlautomarker</id>
+            <url>s3://repo.sqlautomark/snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>repo.teamed.io</id>
+                       
+            <url>s3://repo.sqlautomark/release</url>
+
+        </repository>
+    </distributionManagement>
+    
+    
 </project>

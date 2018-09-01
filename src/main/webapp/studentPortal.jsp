@@ -22,37 +22,35 @@
         <link href="style2.css" rel="stylesheet" type="text/css">
     </head>
 
-    <body>
+    <body >
         <div class="container"> 
             <section id="fancyTabWidget" class="tabs t-tabs">
 
-                <div id="myTabContent" class="tab-content fancyTabContent" aria-live="polite">
-
-
+                <div  id="myTabContent" class="tab-content fancyTabContent" aria-live="polite">
 
                     <%
 
-                        String user = request.getAttribute("name").toString();
+                        String user = request.getParameter("u").toString();
                     %>
-                    <h2 id="title01">Student Portal</h2></br>
-                    <h3 id="username" name="username"><%=user%></h3>
+                    <h2 id="title01" style="text-align: center;">Student Portal</h2></br>
+                    <h3 id="username" name="username" style="text-align: center;"><%=user%></h3>
                     <br><br>
 
-                    <h8 id="title01">Assessments</h8>
 
-                    <table id="t01">
 
-                        <tr>
-                            <td>Assessment</td>
-                            <td>Assessment Type</td>
-                            <td>Start Date</td>
-                            <td>End Date</td>
-                            <td>Total Questions</td>
-                            <td>Total Marks</td>
-                            <td>Begin</td>
+                    <table  id="t01">
+                        <tr  >
+                            <td style="width: auto; font-size: small; ">Assessment</td>
+                            <td style="width: 120px; font-size: small; ">Type</td>
+                            <td style="width: auto; font-size: small; ">Start Date</td>
+                            <td style="width: auto; font-size: small; ">End Date</td>
+                            <td style="width: 105px; font-size: small; ">Questions</td>
+                            <td style="width: 80px; font-size: small; ">Out Of</td>
+                            <td style="width: 80px; font-size: small; ">Retries</td>
+                            <td style="width: 80px; font-size: small; ">Result</td>
+                            <td style="width: 100px; font-size: small; "></td>
                         </tr>
-                    </table>
-                    <table id="t01">
+
                         <%
                             Connection connection = new SQL().getConnection();
 
@@ -62,28 +60,73 @@
                             statement.executeBatch();
 
                             ResultSet rs = statement.executeQuery("SELECT * FROM assessments");
+                            int x = 0;
 
                             while (rs.next())
                             {
                                 String name = rs.getString("assessment_name");
                                 String type = rs.getString("assessment_type");
-                                String start = rs.getString("start_date") + " " + rs.getString("start_time");
-                                String end = rs.getString("end_date") + " " + rs.getString("end_time");
+
+                                String startDate = rs.getString("start_date");
+                                String startTime = rs.getString("start_time");
+                                String start = startDate + " " + startTime;
+
+                                String endDate = rs.getString("end_date");
+                                String endTime = rs.getString("end_time");
+                                String end = endDate + " " + endTime;
+
                                 String questions = rs.getString("total_questions");
                                 String marks = rs.getString("total_marks");
+
+                                int totAttempts = Integer.parseInt(rs.getString("attempts"));
+
+                                Statement statement2 = connection.createStatement();
+                                statement2.addBatch("use `marks`;");
+                                statement2.executeBatch();
+
+                                String sql = "SELECT attemptsLeft, marks FROM `" + name + "` WHERE studentNumber ='" + user + "'";
+                                ResultSet rn = statement2.executeQuery(sql);
+                                int attemptsLeft = 0;
+                                int mark = 0;
+                                rn.next();
+                                attemptsLeft = Integer.parseInt(rn.getString("attemptsLeft"));
+                                String s = rn.getString("marks");
+                                if (s == null)
+                                {
+                                    mark = 0;
+                                }
+                                else
+                                {
+                                    mark = Integer.parseInt(s);
+                                }
+
+
                         %>
                         <tr>
 
-                            <td name="name" id="name"><%=name%></td>
-                            <td><%=type%></td>
-                            <td><%=start%></td>
-                            <td><%=end%></td>
-                            <td><%=questions%></td>
-                            <td><%=marks%></td>
-                            <td><a id="ref-<%=name%> "  href="JavaScript:newTab('<%=name%>', '<%=user%>');">Begin</a></td>
+                            <td style="font-size: small; " name="name" id="name"><%=name%></td>
+                            <td style="font-size: small; "><%=type%></td>
+                            <td style="font-size: small; "><%=start%></td>
+                            <td style="font-size: small; "><%=end%></td>
+
+                            <td style="font-size: small; "><%=questions%></td>
+                            <td style="font-size: small; "><%=marks%></td>
+                            <td style="font-size: small; "><%=attemptsLeft%></td>
+                            <td style="font-size: small; "><%=mark%></td>
+                            <td style="font-size: small; "><a id="ref-<%=x%>"  href="JavaScript:newTab('<%=name%>', '<%=user%>','<%=attemptsLeft%>', '<%=totAttempts%>');">Begin</a></td>
+
+
+                        <p hidden id="<%="attemptsLeft " + x%>"><%=attemptsLeft%></p>
+                        <p hidden id="<%="endDate " + x%>"><%=endDate + "T" + endTime + "Z"%></p>
+                        <p hidden id="<%="startDate " + x%>"><%=startDate + "T" + startTime + "Z"%></p>
+
                         </tr>
                         <%
+
+                                x++;
                             }
+
+
                         %>
 
 
@@ -93,11 +136,78 @@
 
 
                     <script>
-                        function newTab(name, user)
+
+
+                        window.addEventListener('DOMContentLoaded', function ()
                         {
-                            var url = "studentAnswers.jsp?assessment=" + name+"&user="+user;
-                            popupWindow = window.open(url);
-                            
+                            var x = <%=x%>;
+                            var today = new Date();
+                            for (var i = 0; i < x; i++)
+                            {
+                                var v = i;
+                                var y = 'startDate ' + v;
+                                var sDate = document.getElementById(y).innerHTML;
+                                var y1 = 'endDate ' + v;
+                                var eDate = document.getElementById(y1).innerHTML;
+                                var start = new Date(sDate);
+                                var end = new Date(eDate);
+
+
+
+                                var attempts = document.getElementById("attemptsLeft " + v).innerHTML;
+
+                                if (attempts == 0)
+                                {
+                                    document.getElementById("ref-" + v).innerHTML = "Closed";
+                                    document.getElementById("ref-" + v).removeAttribute('href');
+                                }
+
+                                if (end < today)
+                                {
+                                    document.getElementById("ref-" + v).innerHTML = "Closed";
+                                    document.getElementById("ref-" + v).removeAttribute('href');
+                                }
+                                if (start > today)
+                                {
+                                    document.getElementById("ref-" + v).innerHTML = "Closed";
+                                    document.getElementById("ref-" + v).removeAttribute('href');
+                                }
+
+                            }
+                            var endDate = document.getElementById("endDate");
+                            var end = new Date(endDate);
+                        });
+
+                        function newTab(name, user, left, totAttempt)
+                        {
+                            var url;
+                            var l = left;
+                            var at = totAttempt;
+
+                            if (l == at)
+                            {
+
+                                var attempt = btoa(left);
+                                var a = btoa(name);
+                                var u = btoa(user);
+                                url = "studentAnswers.jsp?assessment=" + a + "&user=" + u + "&attempt=" + attempt;
+                                popupWindow = window.open(url);
+                            }
+                            if (l < at)
+                            {
+                                var c = confirm('Are you sure you would like to retry the assignment?\nYour current mark will be erased');
+                                if (c == true)
+                                {
+                                    var attempt = btoa(left);
+                                    var a = btoa(name);
+                                    var u = btoa(user);
+                                    url = "studentAnswers.jsp?assessment=" + a + "&user=" + u + "&attempt=" + attempt;
+                                    popupWindow = window.open(url);
+                                }
+
+                            }
+
+
                         }
                     </script>
 

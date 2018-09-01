@@ -5,7 +5,9 @@ body{
     background-size: cover;
     background-position: center;
     font-family: Verdana;
+    background-attachment: fixed;
 }
+
 .login-box{
     width: 320px;
     height: 420px;
@@ -51,7 +53,7 @@ h1{
     color: #fff;
     font-size: 16px;
 }
-.login-box input[type="submit"]
+.login-box input[type="button"]
 {
     border: none;
     outline: none;
@@ -61,7 +63,7 @@ h1{
     font-size: 18px;
     border-radius: 20px;
 }
-.login-box input[type="submit"]:hover
+.login-box input[type="button"]:hover
 {
     cursor: pointer;
     background: #fff;
