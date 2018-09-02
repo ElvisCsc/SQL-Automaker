@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Facilitiates the uploading of a file 
+    Document   : DataFile upload for the event that a datafile will be uploaded
     Created on : 10 Aug 2018, 7:31:05 AM
     Author     : Zach
 --%>
@@ -8,7 +8,6 @@
 <%@page import="java.nio.file.*"%>
 <%@page import="javax.script.*"%>
 <%@page import="java.nio.charset.*"%>
-<%@page import="javax.script.*"%>
 <%@page import="javax.script.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.io.*,java.util.*, javax.servlet.*" %>
@@ -23,11 +22,8 @@
             File file = null;
             int maximumFileSize = 5000 * 1024;
             int maximumMemorySize = 5000 * 1024;
-
-            //sets file path
             String filePath = "C:\\" + "\\Users\\Zach\\Desktop\\SQLautomark\\src\\main\\resources\\";
             String contentType = request.getContentType();
-
             if ((contentType.indexOf("multipart/form-data") >= 0))
             {
                 DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -53,7 +49,7 @@
                             fi.write(file);
                         }
                     }
-                    CreateStudents c = new CreateStudents(file);
+                    ReadNewData c = new ReadNewData(file);
                 }
                 catch (Exception ex)
                 {
@@ -62,19 +58,12 @@
             }
             else
             {
-        %>
-        <script>
-            alert('Error in file upload');
-        </script>
-        <%
+                System.out.println("Error in file upload.");
             }
         %>
     </body>
     <script>
-        /**
-         * close window
-         * @returns {undefined} closed window
-         */
+        //closes page
         function Close()
         {
             alert("Students successfully added");

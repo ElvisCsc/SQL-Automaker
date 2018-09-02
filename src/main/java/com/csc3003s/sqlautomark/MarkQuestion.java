@@ -1,20 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.csc3003s.sqlautomark;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.*;
 
 /**
+ * Marks individual questions
  *
- * @author Zach
+ * @author MLTZAC001
  */
 public class MarkQuestion
 {
@@ -24,79 +15,166 @@ public class MarkQuestion
     private int mark;
     private String expected;
     private String actual;
+    private String category;
 
-    public MarkQuestion(String expected, String actual, int marks, String database,Connection connection)
+    /**
+     * Constructor method
+     *
+     * @param expected expected answer
+     * @param actual answer provided by student
+     * @param marks marks available
+     * @param database name of database
+     * @param category category of question
+     * @param connection connection to MySQL server database
+     */
+    public MarkQuestion(String expected, String actual, int marks, String database, String category, Connection connection)
     {
         this.connection = connection;
         this.database = database;
         this.expected = expected;
         this.actual = actual;
         this.mark = marks;
+        this.category = category;
     }
 
+    /**
+     * assigns mark for question
+     *
+     * @param x case
+     */
     public void assignMark(int x)
     {
-        
         switch (x)
         {
+            //full marks
             case 0:
-                mark=mark;
+                mark = mark;
                 break;
-
+            //half marks
             case 1:
-                mark= (int)mark/2;
+                mark = (int) mark / 2;
                 break;
-
+//no marks
             case 2:
-                mark=0;
+                mark = 0;
                 break;
         }
     }
 
+    /**
+     * marks the question
+     *
+     * @return mark for the question
+     */
     public int markQuestion()
     {
-        Connection connection = new SQL().getConnection();
 
-        if (actual.isEmpty()||expected.isEmpty())
+        if (actual.isEmpty() || expected.isEmpty())
         {
             assignMark(2);
         }
         else
         {
             try
-        {
-            Statement statement = connection.createStatement();
+            {
+                Statement statement = connection.createStatement();
 
-            statement.addBatch("use `" + database + "`");
+                statement.addBatch("use `" + database + "`");
 
-            statement.executeBatch();
+                statement.executeBatch();
 
-            String s = expected;
-            ResultSet rs = statement.executeQuery(s);
+                //execute correct statement
+                String s = expected;
+                ResultSet rs = statement.executeQuery(s);
 
-            Statement statement1 = connection.createStatement();
+                Statement statement1 = connection.createStatement();
 
-            String s1 = actual;
-            ResultSet rs1 = statement1.executeQuery(s1);
-            ResultSetMetaData rsm1 = rs1.getMetaData();
+                //execute given query
+                String s1 = actual;
+                ResultSet rs1 = statement1.executeQuery(s1);
+                ResultSetMetaData rsm1 = rs1.getMetaData();
 
-            int x = compareResultSets(rs, rs1);
-            assignMark(x);
-            
-            
+                //compare results
+                int x = compareResultSets(rs, rs1);
 
+                //assign marks for question
+                assignMark(x);
+            }
+            catch (SQLException e)
+            {
+                assignMark(checkHalfMarks());
+            }
         }
-        catch (SQLException e)
-        {
-            assignMark(1);
-            System.out.println(e);
-        }
-        }
-        
         return mark;
-
     }
 
+    /**
+     * checks if the question answer deserves half marks
+     *
+     * @return mark
+     */
+    public int checkHalfMarks()
+    {
+        String a = actual;
+        a = a.toUpperCase();
+        int res = 2;
+
+        switch (category)
+        {
+            case "A":
+                if (a.contains("SELECT") && a.contains("FROM"))
+                {
+                    res = 1;
+                }
+                break;
+            case "B":
+                if (a.contains("SELECT") && a.contains("FROM") && a.contains("WHERE"))
+                {
+                    res = 1;
+                }
+                break;
+            case "C":
+                if (a.contains("SELECT") && a.contains("FROM") && a.contains("ORDER BY"))
+                {
+                    res = 1;
+                }
+                break;
+            case "D":
+                if (a.contains("SELECT") && a.contains("FROM") && (a.contains("GROUP BY") || a.contains("HAVING")))
+                {
+                    res = 1;
+                }
+                break;
+            case "E":
+                if (a.contains("SELECT") && a.contains("FROM") && a.contains("\\(") && a.contains("\\)"))
+                {
+                    res = 1;
+                }
+                break;
+            case "F":
+                if (a.contains("SELECT") && a.contains("FROM") && (a.contains("ALL") || a.contains("ANY") || a.contains("SOME") || a.contains("EXISTS")))
+                {
+                    res = 1;
+                }
+                break;
+            case "G":
+                if (a.contains("SELECT") && a.contains("FROM") && (a.contains("WHERE") || a.contains("JOIN")))
+                {
+                    res = 1;
+                }
+                break;
+        }
+        return res;
+    }
+
+    /**
+     * Compares the expected result with the actual result
+     *
+     * @param resultSet1 result set
+     * @param resultSet2 result set
+     * @return mark
+     * @throws SQLException
+     */
     public int compareResultSets(ResultSet resultSet1, ResultSet resultSet2) throws SQLException
     {
         int x = 0;
@@ -107,25 +185,30 @@ public class MarkQuestion
         int row1 = 0;
         int row2 = 0;
 
+        //fetches number of rows in each result set
         while (resultSet1.next())
         {
             row1++;
         }
-        resultSet1.beforeFirst();
         while (resultSet2.next())
         {
             row2++;
         }
+
+        //reset cursors
+        resultSet1.beforeFirst();
         resultSet2.beforeFirst();
 
+        //if the number of rows in the database do not match
         if (row1 != row2)
         {
-            x = 2;
+            x = checkHalfMarks();
 
         }
+        //if the number of columns do not match
         else if (columnsNumber != columnsNumber2)
         {
-            x = 2;
+            x = checkHalfMarks();
         }
         else
         {
@@ -133,9 +216,10 @@ public class MarkQuestion
             {
                 resultSet2.next();
 
+                //for each column
                 for (int i = 1; i <= columnsNumber; i++)
                 {
-
+                    //check if equal
                     if (resultSet1.getString(i) == null || resultSet2.getString(i) == null)
                     {
                         if (!(resultSet1.getString(i) == null && resultSet2.getString(i) == null))
@@ -150,8 +234,6 @@ public class MarkQuestion
                 }
             }
         }
-
         return x;
-        
     }
 }

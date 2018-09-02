@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.csc3003s.sqlautomark;
 
 import java.sql.Connection;
@@ -12,15 +7,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Facilitates connection with MySQL database
  *
- * @author Zach
+ * @author MLTZAC001
  */
 public class SQL
 {
 
     Connection connection = null;
-   
 
+    /**
+     * Constructor method
+     */
     public SQL()
     {
         try
@@ -33,9 +31,13 @@ public class SQL
         }
     }
 
+    /**
+     * fetches connection
+     *
+     * @return connection
+     */
     public Connection getConnection()
     {
         return connection;
-
     }
 }

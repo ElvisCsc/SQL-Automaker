@@ -18,37 +18,40 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Results</title>
-        <link href="style2.css" rel="stylesheet" type="text/css">
-
+        <title>
+            Results
+        </title>
         <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
         <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-
+        <link href="./css/resultsPage.css" rel="stylesheet" type="text/css">
     </head>
-    <body >
+    <body>
         <div class="container"> 
-
             <div id="myTabContent" class="tab-content fancyTabContent" aria-live="polite" >
-
-
-                <h2 id="title01">Results</h2>
-                <br><br>
-
-
+                <center>
+                    <h2>
+                        Results
+                    </h2>
+                </center>
+                <br>
+                <br>
                 <%
-                    /*String a = request.getParameter("a");
+                    //fetches parameters
+                    String a = request.getParameter("a");
                     String u = request.getParameter("u");
-                    Decoder decoder = Base64.getDecoder();
+                    String d = request.getParameter("db");
 
+                    //decodes the strings
+                    Decoder decoder = Base64.getDecoder();
                     byte[] as = decoder.decode(a);
                     byte[] us = decoder.decode(u);
+                    byte[] db = decoder.decode(d);
                     new String(as);
-                    String user = new String(us);*/
+                    String user = new String(us);
+                    String assessment = new String(as);
+                    String database = new String(db);
 
-                    String assessment = "Assignment2";
-                    String user = "SBTELV001";
-                    String database = "preloaded-option-1";
-
+                    //initiates connection to the MySQL database
                     Connection connection = new SQL().getConnection();
                     Statement statement = connection.createStatement();
 
@@ -58,18 +61,21 @@
 
                     ResultSet rs = statement.executeQuery(s);
                     ResultSetMetaData rsmd = rs.getMetaData();
-                    int columnsNumber = rsmd.getColumnCount();
                     ArrayList<Result> results = new ArrayList<Result>();
 
+                    //traverses through the result set
                     while (rs.next())
                     {
+                        //fetches elements
                         String question = rs.getString("question");
                         String studentAnswer = rs.getString("studentAnswer");
                         String expectedAnswer = rs.getString("expectedAnswer");
                         String qID = rs.getString("questionID");
                         String sMarks = rs.getString("studentMarks");
+
                         int questionID = 0;
                         int studentMarks = 0;
+
                         if (qID != null)
                         {
                             questionID = Integer.parseInt(qID);
@@ -78,15 +84,19 @@
                         {
                             studentMarks = Integer.parseInt(sMarks);
                         }
-
                         int outOf = Integer.parseInt(rs.getString("marks"));
 
+                        //creates new Result
                         Result r = new Result(questionID, question, studentAnswer, expectedAnswer, studentMarks, outOf);
+
+                        //adds result to the list
                         results.add(r);
                     }
 
                     int totMarks = 0;
                     int assignmentTotal = 0;
+
+                    //for each question, create a section to display the answer
                     for (Result result : results)
                     {
                         int num = result.getQuestionID();
@@ -100,58 +110,96 @@
 
                 %>
                 <p hidden id="user"><%=user%></p>
-                <h3>Question <%=num%></h3>
-
+                <h4>
+                    Question <%=num%>
+                </h4>
                 <%
-
+                    //if the question is correct
                     if (marks == outOf)
                     {
                 %>
-                <h4 style="color: greenyellow;">Correct</h4>
-
+                <h5 id="correct">
+                    Correct
+                </h5>
+                <h5>
+                    Question:
+                </h5>
+                <h5>
+                    <%=question%>
+                </h5>
+                <br>
+                <h5>
+                    Your Answer:
+                </h5>
+                <h5>
+                    <%=given%>
+                </h5>
+                <br>
+                <h5 style="text-align: right;">
+                    <%=marks%> out of <%=outOf%>
+                </h5>
                 <%
                 }
+                //if the question is incorrect
                 else
                 {
                 %>
-                <h4 style="color: red;">Incorrect</h4>
-                <h6 style="font-family: 'Courier New';">Question:</h6>
-                <h6 style="font-family: 'Courier New';"><%=question%></h6>
+                <h5 id="incorrect">
+                    Incorrect
+                </h5>
+                <h5>
+                    Question:
+                </h5>
+                <h5>
+                    <%=question%>
+                </h5>
                 <br>
-                <h6 style="font-family: 'Courier New';">Expected Answer:</h6>
-                <h6 style="font-family: 'Courier New';"><%=expected%></h6>
+                <h5>
+                    Expected Answer:
+                </h5>
+                <h5>
+                    <%=expected%>
+                </h5>
                 <br>
-                <h6 style="font-family: 'Courier New';">Your Answer:</h6>
-                <h6 style="font-family: 'Courier New';"><%=given%></h6>
+                <h5>
+                    Your Answer:
+                </h5>
+                <h5>
+                    <%=given%>
+                </h5>
                 <br>
-                <h6 style="font-family: 'Courier New';">Mark: <%=marks%> out of <%=outOf%></h6>
+                <h5 style="text-align: right;">
+                    <%=marks%> out of <%=outOf%>
+                </h5>
                 <%
+                        }
                     }
-                %>  <br><%
-                    }
-
                 %>
-
-                <h4 style="text-align: center;">Total Marks: <%=totMarks + " out of " + assignmentTotal%></h4>
-
-                <button onClick="Javascript: home();">Home</button>
-
+                <h2 style="text-align: center;">
+                    Total Marks: <%=totMarks + " out of " + assignmentTotal%>
+                </h2>
+                <br>
+                <center>
+                    <button class="button" id="b1" onClick="Javascript: home();">
+                        Home
+                    </button>
+                </center>
             </div>
-
-
         </div>
     </body>
     <script>
-
-
+ 
+        /**
+         * redirects user back to Student Page
+         * @returns redirection to student portal
+         */
         function home()
         {
             var user = document.getElementById("user").innerHTML;
-           
-            var s = 'studentPortal.jsp?user='+user;
+            alert(user);
+            var u = btoa(user);
+            var s = 'studentPortal.jsp?u=' + u;
             window.location = s;
         }
-
-
     </script>
 </html>

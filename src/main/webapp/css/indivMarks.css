@@ -1,7 +1,7 @@
 body{
     margin: 0;
     padding: 0;
-    background: url(uct_illustration.jpg);
+    background: url(../resources/uct_illustration.jpg);
     background-size: cover;
     background-position: center;
     font-family: Verdana;
@@ -164,134 +164,96 @@ li.fancyTab.active a {
     padding-bottom:30px;
 }
 
-.arrow-down {
-    display:none;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 22px solid #ddd;
-    position: absolute;
-    top: -1px;
-    left: calc(50% - 20px);
-}
 
-.arrow-down-inner {
-    width: 0;
-    height: 0;
-    border-left: 18px solid transparent;
-    border-right: 18px solid transparent;
-    border-top: 12px solid #fff;
-    position: absolute;
-    top: -22px;
-    left: -18px;
-}
-
-.fancyTab.active .arrow-down {
-    display: block;
-}
-
-@media (max-width: 1200px) {
-
-    .fancyTab .fa {
-        font-size: 36px;
-    }
-
-    .fancyTab .hidden-xs {
-        font-size:22px;
-    }
-
-}
-
-
-@media (max-width: 992px) {
-
-    .fancyTab .fa {
-        font-size: 33px;
-    }
-
-    .fancyTab .hidden-xs {
-        font-size:18px;
-        font-weight:normal;
-    }
-
-}
-
-
-@media (max-width: 768px) {
-
-    .fancyTab > a {
-        font-size:18px;
-    }
-
-    .nav > li.fancyTab > a {
-        padding:15px 0;
-        margin-bottom:inherit;
-    }
-
-    .fancyTab .fa {
-        font-size:30px;
-    }
-
-    .nav-tabs > li.fancyTab > a {
-        border-right:1px solid transparent;
-        padding-bottom:0;
-    }
-
-    .fancyTab.active .fa {
-        color: #333;
-    }
-
-
-}
 table {
     font-family: 'Verdana';
+
+    border: 1px solid #ccc;
+    border-collapse:collapse; 
+    table-layout:fixed; 
     width:100%;
 }
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
+table td {
+    padding-left: 5px;
+    border: 1px solid #ccc;
+    width:100px; 
+    word-wrap:break-word;
 }
-th, td {
-    padding: 15px;
-    text-align: left;
+table tr
+{
+
 }
-table#t01 tr:nth-child(even) {
+table tr:nth-child(even) {
     background-color: #eee;
 }
-table#t01 tr:nth-child(odd) {
+table tr:nth-child(odd) {
     background-color: #fff;
 }
-table#t01 th {
 
-    background-color: gainsboro;
-    color: black;
-}
-* {
-    box-sizing: border-box;
-}
-body {
-    font: 14px/1 Verdana;
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
 }
 
-
-
-
-
-
-.login-box input[type="button"]
-{
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
     border: none;
     outline: none;
-    height: 40px;
-    background: #2672ec;
-    color: #fff;
-    font-size: 18px;
-    border-radius: 20px;
-}
-.login-box input[type="button"]:hover
-{
     cursor: pointer;
-    background: #fff;
-    color: #000;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
 }
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+.title#title01 {
+    font: Verdana;
+    align-content: center;
+}
+.button#b1 {
+    width: 300px;
+    background-color: #2672ec;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button#b2 {
+    width: 100px;
+    background-color: #2672ec;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+

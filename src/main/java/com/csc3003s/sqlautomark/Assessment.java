@@ -1,27 +1,16 @@
 package com.csc3003s.sqlautomark;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.time.*;
+import java.util.*;
 
 /**
+ * Assessment class that assigns assessments to users based on the database set
+ * of questions
  *
- * @author Zach
+ * @author MLTZAC001
  */
-@WebServlet("/Assessment")
-public class Assessment extends HttpServlet
+public class Assessment
 {
 
     private int ID;
@@ -41,29 +30,85 @@ public class Assessment extends HttpServlet
     private LocalTime startTime;
     private LocalDate endDate;
     private LocalTime endTime;
-    private HttpServletRequest request;
-    private HttpServletResponse resp;
-
     private int attempts;
     private ArrayList<Question> question;
     private ArrayList<String> students;
 
     private Connection connection;
 
+    /**
+     * Constructor method
+     *
+     * @param name assessment name
+     * @param type assessment type
+     * @param database database name
+     * @param questions number of questions
+     * @param marks total marks
+     * @param catA number of questions from category A
+     * @param catB number of questions from category B
+     * @param catC number of questions from category C
+     * @param catD number of questions from category D
+     * @param catE number of questions from category E
+     * @param catF number of questions from category F
+     * @param catG number of questions from category G
+     * @param attempts number of attempts allowed
+     * @param startDate start date
+     * @param startTime start time
+     * @param endDate end date
+     * @param endTime end time
+     */
+    public Assessment(String name, String type, String database, int questions, int marks, int catA, int catB, int catC, int catD, int catE, int catF, int catG, int attempts, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime)
+    {
+        //initiates connection with MySQL database
+        this.connection = new SQL().getConnection();
+
+        this.name = name;
+        this.type = type;
+        this.database = database;
+        this.questions = questions;
+        this.totalMarks = marks;
+        this.catA = catA;
+        this.catB = catB;
+        this.catC = catC;
+        this.catD = catD;
+        this.catE = catE;
+        this.catF = catF;
+        this.catG = catG;
+        this.attempts = attempts;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
+
+        this.question = new ArrayList<Question>();
+        this.students = new ArrayList<String>();
+
+        fetchStudents();
+        createAssessment();
+        createSummary();
+    }
+
+    /**
+     * Empty constructor method
+     */
     public Assessment()
     {
 
     }
 
+    /**
+     * Assigns questions to students
+     */
     public void assign()
     {
         try
         {
 
             Statement statement = connection.createStatement();
-
             statement.addBatch("use `" + database + "`;");
             statement.executeBatch();
+
+            //fetches all questions
             ResultSet resultset = statement.executeQuery("SELECT * FROM questions;");
 
             while (resultset.next())
@@ -74,18 +119,152 @@ public class Assessment extends HttpServlet
                 String category = resultset.getString("category");
                 int marks = Integer.parseInt(resultset.getString("marks"));
 
+                //creates new question element
                 Question q = new Question(questionNumber, question, expectedAnswer, category, marks);
+
+                //adds question to list
                 this.question.add(q);
             }
 
-            //`sqlautomarker-individual-records`
             statement.addBatch("use `sqlautomarker-individual-records`;");
             statement.executeBatch();
 
             Statement statement2 = connection.createStatement();
 
+            statement.addBatch("use `" + database + "`;");
+            statement.executeBatch();
+
+            //traverse through students
             for (String student : students)
             {
+                ArrayList<Integer> A = new ArrayList<Integer>();
+                ArrayList<Integer> B = new ArrayList<Integer>();
+                ArrayList<Integer> C = new ArrayList<Integer>();
+                ArrayList<Integer> D = new ArrayList<Integer>();
+                ArrayList<Integer> E = new ArrayList<Integer>();
+                ArrayList<Integer> F = new ArrayList<Integer>();
+                ArrayList<Integer> G = new ArrayList<Integer>();
+
+                //if there are questions from category A
+                if (catA != 0)
+                {
+                    //fetches random questions from the category
+                    String catA = "SELECT questionNumber FROM questions WHERE category='A'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catA + ";";
+
+                    ResultSet rs = statement.executeQuery(catA);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        A.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //if there are questions from category B
+                if (catB != 0)
+                {
+                    //fetches random questions from the category
+                    String catB = "SELECT questionNumber FROM questions WHERE category='B'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catB + ";";
+
+                    ResultSet rs = statement.executeQuery(catB);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        B.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //if there are questions from category C
+                if (catC != 0)
+                {
+                    //fetches random questions from the category
+                    String catC = "SELECT questionNumber FROM questions WHERE category='C'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catC + ";";
+
+                    ResultSet rs = statement.executeQuery(catC);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        C.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //if there are questions from category D
+                if (catD != 0)
+                {
+                    //fetches random questions from the category
+                    String catD = "SELECT questionNumber FROM questions WHERE category='D'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catD + ";";
+
+                    ResultSet rs = statement.executeQuery(catD);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        D.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //if there are questions from category E
+                if (catE != 0)
+                {
+                    //fetches random questions from the category
+                    String catE = "SELECT questionNumber FROM questions WHERE category='E'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catE + ";";
+
+                    ResultSet rs = statement.executeQuery(catE);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        E.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //if there are questions from category F
+                if (catF != 0)
+                {
+                    //fetches random questions from the category
+                    String catF = "SELECT questionNumber FROM questions WHERE category='F'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catF + ";";
+
+                    ResultSet rs = statement.executeQuery(catF);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        F.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //if there are questions from category A
+                if (catG != 0)
+                {
+                    //fetches random questions from the category
+                    String catG = "SELECT questionNumber FROM questions WHERE category='G'"
+                            + "ORDER BY RAND()"
+                            + "LIMIT " + this.catG + ";";
+
+                    ResultSet rs = statement.executeQuery(catG);
+
+                    //traverses result set
+                    while (rs.next())
+                    {
+                        G.add(Integer.parseInt(rs.getString("questionNumber")));
+                    }
+                }
+
+                //creates and assigns individual student record
                 String create = "CREATE TABLE `sqlautomarker-individual-records`.`" + student + "-" + name + "` ("
                         + "`questionID` INT NOT NULL AUTO_INCREMENT,"
                         + "`database` VARCHAR(45) NULL,"
@@ -96,184 +275,107 @@ public class Assessment extends HttpServlet
                         + "`category` VARCHAR(1) NULL,"
                         + "`totalMarks` INT NULL,"
                         + "PRIMARY KEY (`questionID`));";
+
                 statement2.addBatch(create);
-                statement2.executeBatch();
-
-                ArrayList<Question> q = new ArrayList<Question>();
-
-                statement.addBatch("use `" + database + "`;");
-                statement.executeBatch();
-
-                ArrayList<Integer> A = new ArrayList<Integer>();
-                ArrayList<Integer> B = new ArrayList<Integer>();
-                ArrayList<Integer> C = new ArrayList<Integer>();
-                ArrayList<Integer> D = new ArrayList<Integer>();
-                ArrayList<Integer> E = new ArrayList<Integer>();
-                ArrayList<Integer> F = new ArrayList<Integer>();
-                ArrayList<Integer> G = new ArrayList<Integer>();
-
-                if (catA != 0)
-                {
-                    String catA = "SELECT questionNumber FROM questions WHERE category='A'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catA + ";";
-
-                    ResultSet rs = statement.executeQuery(catA);
-
-                    while (rs.next())
-                    {
-                        A.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
-                if (catB != 0)
-                {
-                    String catB = "SELECT questionNumber FROM questions WHERE category='B'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catB + ";";
-
-                    ResultSet rs = statement.executeQuery(catB);
-
-                    while (rs.next())
-                    {
-                        B.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
-                if (catC != 0)
-                {
-                    String catC = "SELECT questionNumber FROM questions WHERE category='C'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catC + ";";
-
-                    ResultSet rs = statement.executeQuery(catC);
-
-                    while (rs.next())
-                    {
-                        C.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
-                if (catD != 0)
-                {
-                    String catD = "SELECT questionNumber FROM questions WHERE category='D'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catD + ";";
-
-                    ResultSet rs = statement.executeQuery(catD);
-
-                    while (rs.next())
-                    {
-                        D.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
-                if (catE != 0)
-                {
-                    String catE = "SELECT questionNumber FROM questions WHERE category='E'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catE + ";";
-
-                    ResultSet rs = statement.executeQuery(catE);
-
-                    while (rs.next())
-                    {
-                        E.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
-                if (catF != 0)
-                {
-                    String catF = "SELECT questionNumber FROM questions WHERE category='F'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catF + ";";
-
-                    ResultSet rs = statement.executeQuery(catF);
-
-                    while (rs.next())
-                    {
-                        F.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
-                if (catG != 0)
-                {
-                    String catG = "SELECT questionNumber FROM questions WHERE category='G'"
-                            + "ORDER BY RAND()"
-                            + "LIMIT " + this.catG + ";";
-
-                    ResultSet rs = statement.executeQuery(catG);
-
-                    while (rs.next())
-                    {
-                        G.add(Integer.parseInt(rs.getString("questionNumber")));
-                    }
-                }
 
                 for (int i = 0; i < this.catA; i++)
                 {
+                    int x = A.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (A.get(i) + 1) + "', '" + question.get(A.get(i)).getQuestion() + "', null, null, '" + question.get(A.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'A');";
+
                     statement2.addBatch(sql);
                 }
+
                 for (int i = 0; i < catB; i++)
                 {
+                    int x = B.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (B.get(i) + 1) + "', '" + question.get(B.get(i)).getQuestion() + "', null, null, '" + question.get(B.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'B');";
+
                     statement2.addBatch(sql);
                 }
+
                 for (int i = 0; i < catC; i++)
                 {
+                    int x = C.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (C.get(i) + 1) + "', '" + question.get(C.get(i)).getQuestion() + "', null, null, '" + question.get(C.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'C');";
+
                     statement2.addBatch(sql);
                 }
+
                 for (int i = 0; i < catD; i++)
                 {
+                    int x = D.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (D.get(i) + 1) + "', '" + question.get(D.get(i)).getQuestion() + "', null, null, '" + question.get(D.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'D');";
+
                     statement2.addBatch(sql);
                 }
+
                 for (int i = 0; i < catE; i++)
                 {
+                    int x = E.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (E.get(i) + 1) + "', '" + question.get(E.get(i)).getQuestion() + "', null, null, '" + question.get(E.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'E');";
+
                     statement2.addBatch(sql);
                 }
+
                 for (int i = 0; i < catF; i++)
                 {
+                    int x = F.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (F.get(i) + 1) + "', '" + question.get(F.get(i)).getQuestion() + "', null, null, '" + question.get(F.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'F');";
+
                     statement2.addBatch(sql);
                 }
+
                 for (int i = 0; i < catG; i++)
                 {
+                    int x = G.get(i);
+
+                    //insert question record into database
                     String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + student + "-" + name + "` "
                             + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                            + "VALUES ('" + database + "', '" + (G.get(i) + 1) + "', '" + question.get(G.get(i)).getQuestion() + "', null, null, '" + question.get(G.get(i)).getCategory() + "');";
+                            + "VALUES ('" + database + "', '" + x + "', '" + question.get(x - 1).getQuestion() + "', null, null, 'G');";
+
                     statement2.addBatch(sql);
                 }
-
                 statement2.executeBatch();
-
             }
-
         }
         catch (Exception e)
         {
             System.out.println(e);
         }
-
     }
 
-    public void reassign()
-    {
-
-    }
-
+    /**
+     * creates a summary of the assignment in the marks database
+     */
     public void createSummary()
     {
-        Connection connection = new SQL().getConnection();
+
         try
         {
             Statement statement = connection.createStatement();
@@ -281,6 +383,7 @@ public class Assessment extends HttpServlet
             statement.addBatch("use `marks`;");
             statement.executeBatch();
 
+            //creates summary table
             String create = "CREATE TABLE `marks`.`" + this.name + "` ("
                     + "  `studentNumber` VARCHAR(9) NOT NULL,"
                     + "  `attemptsLeft` INT NOT NULL,"
@@ -290,8 +393,10 @@ public class Assessment extends HttpServlet
             statement.addBatch(create);
             statement.executeBatch();
 
+            //traverse through students
             for (String student : students)
             {
+                //insert each student into the table
                 String sql = "INSERT INTO `marks`.`" + name + "` "
                         + "(`studentNumber`, `attemptsLeft`) "
                         + "VALUES ('" + student + "', '" + attempts + "');";
@@ -306,6 +411,9 @@ public class Assessment extends HttpServlet
         }
     }
 
+    /**
+     * fetch all students from database
+     */
     public void fetchStudents()
     {
         try
@@ -326,38 +434,46 @@ public class Assessment extends HttpServlet
         {
             System.out.println(e);
         }
-
     }
 
+    /**
+     * reassigns assessment to user if s/he wants to try again
+     *
+     * @param user student number
+     * @param Assessment assessment name
+     * @param database database name
+     */
     public void updateAssessment(String user, String Assessment, String database)
     {
         ArrayList<Question> quest = new ArrayList<Question>();
+
         try
         {
+            //initiates connection with MySQL database
             Connection connection = new SQL().getConnection();
             Statement statement = connection.createStatement();
 
             statement.addBatch("use `sqlautomarker`;");
             statement.executeBatch();
 
+            //fetch information from assessment record in the assessment database
             String as = "SELECT * FROM assessments WHERE assessment_name = '" + Assessment + "';";
 
             ResultSet r = statement.executeQuery(as);
             r.next();
 
             int a = Integer.parseInt(r.getString("category_a"));
-
             int b = Integer.parseInt(r.getString("category_b"));
             int c = Integer.parseInt(r.getString("category_c"));
             int d = Integer.parseInt(r.getString("category_d"));
             int e = Integer.parseInt(r.getString("category_e"));
             int f = Integer.parseInt(r.getString("category_f"));
             int g = Integer.parseInt(r.getString("category_g"));
-           
 
             statement.addBatch("use `sqlautomarker-individual-records`;");
             statement.executeBatch();
 
+            //removes table from the database
             String drop = "DROP TABLE `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "`;";
             statement.addBatch(drop);
             statement.executeBatch();
@@ -366,6 +482,7 @@ public class Assessment extends HttpServlet
             statement.executeBatch();
             ResultSet resultset = statement.executeQuery("SELECT * FROM questions;");
 
+            //traverse through result set
             while (resultset.next())
             {
                 int questionNumber = Integer.parseInt(resultset.getString("questionNumber"));
@@ -374,7 +491,10 @@ public class Assessment extends HttpServlet
                 String category = resultset.getString("category");
                 int marks = Integer.parseInt(resultset.getString("marks"));
 
+                //creates new question element
                 Question q = new Question(questionNumber, question, expectedAnswer, category, marks);
+
+                //adds question to list
                 quest.add(q);
             }
 
@@ -384,6 +504,7 @@ public class Assessment extends HttpServlet
 
             Statement statement2 = connection.createStatement();
 
+            //creates table for user
             String create = "CREATE TABLE `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` ("
                     + "`questionID` INT NOT NULL AUTO_INCREMENT,"
                     + "`database` VARCHAR(45) NULL,"
@@ -410,92 +531,125 @@ public class Assessment extends HttpServlet
             ArrayList<Integer> F = new ArrayList<Integer>();
             ArrayList<Integer> G = new ArrayList<Integer>();
 
+            //if there are questions from category A
             if (a != 0)
             {
+                //fetches random questions from the category
                 String catA = "SELECT questionNumber FROM questions WHERE category='A'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + a + ";";
 
                 ResultSet rs = statement.executeQuery(catA);
 
+                //traverses result set
                 while (rs.next())
                 {
                     A.add(Integer.parseInt(rs.getString("questionNumber")));
                 }
             }
+
+            //if there are questions from category B
             if (b != 0)
             {
+
+                //fetches random questions from the category
                 String catB = "SELECT questionNumber FROM questions WHERE category='B'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + b + ";";
 
                 ResultSet rs = statement.executeQuery(catB);
 
+                //traverses result set
                 while (rs.next())
                 {
                     B.add(Integer.parseInt(rs.getString("questionNumber")));
                 }
             }
+
+            //if there are questions from category C
             if (c != 0)
             {
+
+                //fetches random questions from the category
                 String catC = "SELECT questionNumber FROM questions WHERE category='C'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + c + ";";
 
                 ResultSet rs = statement.executeQuery(catC);
 
+                //traverses result set
                 while (rs.next())
                 {
                     C.add(Integer.parseInt(rs.getString("questionNumber")));
                 }
             }
+
+            //if there are questions from category D
             if (d != 0)
             {
+
+                //fetches random questions from the category
                 String catD = "SELECT questionNumber FROM questions WHERE category='D'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + d + ";";
 
                 ResultSet rs = statement.executeQuery(catD);
 
+                //traverses result set
                 while (rs.next())
                 {
                     D.add(Integer.parseInt(rs.getString("questionNumber")));
                 }
             }
+
+            //if there are questions from category E
             if (e != 0)
             {
+
+                //fetches random questions from the category
                 String catE = "SELECT questionNumber FROM questions WHERE category='E'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + e + ";";
 
                 ResultSet rs = statement.executeQuery(catE);
 
+                //traverses result set
                 while (rs.next())
                 {
                     E.add(Integer.parseInt(rs.getString("questionNumber")));
                 }
             }
+
+            //if there are questions from category F
             if (f != 0)
             {
+
+                //fetches random questions from the category
                 String catF = "SELECT questionNumber FROM questions WHERE category='F'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + f + ";";
 
                 ResultSet rs = statement.executeQuery(catF);
 
+                //traverses result set
                 while (rs.next())
                 {
                     F.add(Integer.parseInt(rs.getString("questionNumber")));
                 }
             }
+
+            //if there are questions from category G
             if (g != 0)
             {
+
+                //fetches random questions from the category
                 String catG = "SELECT questionNumber FROM questions WHERE category='G'"
                         + "ORDER BY RAND()"
                         + "LIMIT " + g + ";";
 
                 ResultSet rs = statement.executeQuery(catG);
 
+                //traverses result set
                 while (rs.next())
                 {
                     G.add(Integer.parseInt(rs.getString("questionNumber")));
@@ -504,51 +658,72 @@ public class Assessment extends HttpServlet
 
             for (int i = 0; i < a; i++)
             {
+                int x = A.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (A.get(i) + 1) + "', '" + quest.get(A.get(i)).getQuestion() + "', null, null, '" + quest.get(A.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'A');";
                 statement2.addBatch(sql);
             }
             for (int i = 0; i < b; i++)
             {
+                int x = B.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (B.get(i) + 1) + "', '" + quest.get(B.get(i)).getQuestion() + "', null, null, '" + quest.get(B.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'B');";
                 statement2.addBatch(sql);
             }
             for (int i = 0; i < c; i++)
             {
+                int x = C.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (C.get(i) + 1) + "', '" + quest.get(C.get(i)).getQuestion() + "', null, null, '" + quest.get(C.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'C');";
                 statement2.addBatch(sql);
             }
             for (int i = 0; i < d; i++)
             {
+                int x = D.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (D.get(i) + 1) + "', '" + quest.get(D.get(i)).getQuestion() + "', null, null, '" + quest.get(D.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'D');";
                 statement2.addBatch(sql);
             }
             for (int i = 0; i < e; i++)
             {
+                int x = E.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (E.get(i) + 1) + "', '" + quest.get(E.get(i)).getQuestion() + "', null, null, '" + quest.get(E.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'E');";
                 statement2.addBatch(sql);
             }
             for (int i = 0; i < f; i++)
             {
+                int x = F.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (F.get(i) + 1) + "', '" + quest.get(F.get(i)).getQuestion() + "', null, null, '" + quest.get(F.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'F');";
                 statement2.addBatch(sql);
             }
             for (int i = 0; i < g; i++)
             {
+                int x = G.get(i);
+
+                //insert question record into database
                 String sql = "INSERT INTO `sqlautomarker-individual-records`.`" + user + "-" + Assessment + "` "
                         + "(`database`, `questionReference`,`question` , `studentAnswer` ,`studentMarks`, `category`) "
-                        + "VALUES ('" + database + "', '" + (G.get(i) + 1) + "', '" + quest.get(G.get(i)).getQuestion() + "', null, null, '" + quest.get(G.get(i)).getCategory() + "');";
+                        + "VALUES ('" + database + "', '" + x + "', '" + quest.get(x - 1).getQuestion() + "', null, null, 'G');";
                 statement2.addBatch(sql);
             }
 
@@ -562,6 +737,9 @@ public class Assessment extends HttpServlet
 
     }
 
+    /**
+     * Creates an assessment record in the assessments table
+     */
     public void createAssessment()
     {
 
@@ -573,47 +751,9 @@ public class Assessment extends HttpServlet
             statement.executeUpdate(create);
             assign();
         }
-
         catch (Exception e)
         {
             System.out.println(e);
         }
     }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException
-    {
-        this.request = request;
-        this.resp = resp;
-        int ID;
-        this.name = request.getParameter("assessmentName");
-        this.type = request.getParameter("assessmentType");
-        this.database = request.getParameter("selectDatabase");
-        this.questions = Integer.parseInt(request.getParameter("numQuestions"));
-        this.totalMarks = Integer.parseInt(request.getParameter("totMarks"));
-        this.catA = Integer.parseInt(request.getParameter("catA"));
-        this.catB = Integer.parseInt(request.getParameter("catB"));
-        this.catC = Integer.parseInt(request.getParameter("catC"));
-        this.catD = Integer.parseInt(request.getParameter("catD"));
-        this.catE = Integer.parseInt(request.getParameter("catE"));
-        this.catF = Integer.parseInt(request.getParameter("catF"));
-        this.catG = Integer.parseInt(request.getParameter("catG"));
-        this.attempts = Integer.parseInt(request.getParameter("attempts"));
-        this.startDate = LocalDate.parse(request.getParameter("startDate"));
-        this.startTime = LocalTime.parse(request.getParameter("startTime"));
-        this.endDate = LocalDate.parse(request.getParameter("endDate"));
-        this.endTime = LocalTime.parse(request.getParameter("endTime"));
-
-        this.question = new ArrayList<Question>();
-        this.students = new ArrayList<String>();
-
-        this.connection = new SQL().getConnection();
-
-        fetchStudents();
-        createAssessment();
-        createSummary();
-        this.resp.sendRedirect("teacherPortal.jsp?");
-
-    }
-
 }
