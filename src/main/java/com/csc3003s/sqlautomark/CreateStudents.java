@@ -16,6 +16,7 @@ public class CreateStudents
     private File students;
     private Connection connection;
     private ArrayList<User> users;
+    private boolean isValid;
 
     /**
      * Constructor method
@@ -29,6 +30,7 @@ public class CreateStudents
         //initiates connection with MySQL database
         this.connection = new SQL().getConnection();
         this.users = new ArrayList<User>();
+        this.isValid = true;
         readFile();
 
     }
@@ -45,19 +47,19 @@ public class CreateStudents
             Statement statement = connection.createStatement();
             String sql = "";
             String p = "";
-            
+
             //traverse students
             for (User user : users)
             {
                 //insert record into user database
                 sql = "INSERT INTO `sqlautomarker`.`Users` (`UserID`, `Name`, `Role`) VALUES ('" + user.getUserID().toUpperCase() + "', '" + user.getName() + "', '" + user.getRole() + "');";
-               
+
                 //generates a secure password
                 String pass = new GeneratePassword().getPassword();
-                
+
                 //insert record into password table
                 p = "INSERT INTO `sqlautomarker`.`Password` (`UserID`, `Password`) VALUES ('" + user.getUserID().toUpperCase() + "', '" + pass + "');";
-                
+
                 statement.addBatch(p);
                 stmt.addBatch(sql);
             }
@@ -68,6 +70,16 @@ public class CreateStudents
         {
             System.out.println(e);
         }
+    }
+
+    /**
+     * Checks if the file format is valid
+     *
+     * @return
+     */
+    public boolean isValid()
+    {
+        return isValid;
     }
 
     /**
@@ -95,15 +107,11 @@ public class CreateStudents
 
                 s = f.readLine();
             }
-            for (User user : users)
-            {
-                System.out.println(user.toString());
-            }
             addToDatabase();
         }
         catch (Exception e)
         {
-            System.out.println(e);
+            isValid = false;
         }
     }
 }

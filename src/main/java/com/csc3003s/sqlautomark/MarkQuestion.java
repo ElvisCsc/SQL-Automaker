@@ -102,6 +102,7 @@ public class MarkQuestion
             }
             catch (SQLException e)
             {
+                System.out.println(e);
                 assignMark(checkHalfMarks());
             }
         }

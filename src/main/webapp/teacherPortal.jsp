@@ -109,13 +109,6 @@
                                     </td>
                                     <td>
                                     <center>
-                                        <Button class="button" id="b1" onclick="move('Upload New Questions')">
-                                            Upload New Questions
-                                        </Button>
-                                    </center>
-                                    </td>
-                                    <td>
-                                    <center>
                                         <Button class="button" id="b1" onclick="move('View Results')">
                                             View Results
                                         </Button>
@@ -311,13 +304,13 @@
                                 <div class="tab">
                                     <a id="view_students"  href="JavaScript:newPopup('/javascript/examples/sample_popup.cfm');" target="popup" >
                                     </a>
-                                    <button id="student_overview" class="tablinks" onclick="openTab(event, 'Student Overview')" id="defaultOpen">
+                                    <button id="assessments" class="tablinks" onclick="openTab(event, 'Student Overview')" id="defaultOpen">
                                         Student Overview
                                     </button>
                                     <button id="add_student" class="tablinks" onclick="openTab(event, 'Add Students')">
                                         Add Students
                                     </button>
-                                    <button id="remove_student" class="tablinks" onclick="openTab(event, 'Remove Students')">
+                                    <button id="grades" class="tablinks" onclick="openTab(event, 'Remove Students')">
                                         Remove Students
                                     </button>
                                 </div>
@@ -350,7 +343,7 @@
                                         Please select a file to upload
                                     </h5>
                                     <br>
-                                    <form id = "addStudent" action="fileupload.jsp" method="post" enctype="multipart/form-data"  target="_blank">
+                                    <form id = "addStudent" action="fileupload.jsp" method="post" enctype="multipart/form-data" >
                                         <input id = "file" type="file" name="file" size="50" />
                                         <br>
                                         <br>

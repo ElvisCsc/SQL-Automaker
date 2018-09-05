@@ -103,7 +103,57 @@
         }
 
         boolean exists = false;
+        boolean over = false;
 
+        String count = "select count(*) from `" + database + "`.`questions` where category ='A' UNION ALL select count(*) from `" + database + "`.`questions` where category ='B' UNION ALL "
+                + "select count(*) from `" + database + "`.`questions` where category ='C' UNION ALL select count(*) from `" + database + "`.`questions` where category ='D' UNION ALL "
+                + "select count(*) from `" + database + "`.`questions` where category ='E' UNION ALL select count(*) from `" + database + "`.`questions` where category ='F' UNION ALL "
+                + "select count(*) from `" + database + "`.`questions` where category ='G';";
+
+        rs = statement.executeQuery(count);
+        ArrayList<Integer> counting = new ArrayList<Integer>();
+
+        while (rs.next())
+        {
+            counting.add(Integer.parseInt(rs.getString(1)));
+        }
+
+        ArrayList<String> counter = new ArrayList<String>();
+        if (counting.get(0) < A)
+        {
+            counter.add("A");
+            over = true;
+        }
+        if (counting.get(1) < B)
+        {
+            counter.add("B");
+            over = true;
+        }
+        if (counting.get(2) < C)
+        {
+            counter.add("C");
+            over = true;
+        }
+        if (counting.get(3) < D)
+        {
+            counter.add("D");
+            over = true;
+        }
+        if (counting.get(4) < E)
+        {
+            counter.add("E");
+            over = true;
+        }
+        if (counting.get(5) < F)
+        {
+            counter.add("F");
+            over = true;
+        }
+        if (counting.get(6) < G)
+        {
+            counter.add("G");
+            over = true;
+        }
         //traverses all assessment names looking for one with the same name
         for (String elem : arr)
         {
@@ -112,6 +162,21 @@
             {
                 exists = true;
             }
+        }
+
+        //if the number of questions in a category exceeds the number available
+        if (over == true)
+        {
+    %>
+    <script>
+        //alerts the user of an error
+        alert('The following categories exceed the available questions <%=counter.toString()%>');
+        document.getElementById("head").innerHTML = "Redirecting to Create Assessment page...";
+
+        //redirects to the Create Assessment page
+        window.history.back();
+    </script>
+    <%
         }
 
         //if the assessment already exists
@@ -124,14 +189,14 @@
         document.getElementById("head").innerHTML = "Redirecting to Create Assessment page...";
 
         //redirects to the Create Assessment page
-        window.location = 'createAssessment.jsp?';
+        window.history.back();
     </script>
     <%
         }
         //if there is no matching assessment name
-        if (exists == false)
+        if (exists == false && over == false)
         {
-            Assessment ass = new Assessment(assessmentName, assessmentType, database, questions, totalMarks, A, B, C, D, E, F, G, numAttempts, startDate, startTime, endDate, endTime);
+           Assessment ass = new Assessment(assessmentName, assessmentType, database, questions, totalMarks, A, B, C, D, E, F, G, numAttempts, startDate, startTime, endDate, endTime);
     %>
     <script>
         //alerts the user that the assignment has been created

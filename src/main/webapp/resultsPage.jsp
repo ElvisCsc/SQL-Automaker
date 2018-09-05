@@ -196,7 +196,6 @@
         function home()
         {
             var user = document.getElementById("user").innerHTML;
-            alert(user);
             var u = btoa(user);
             var s = 'studentPortal.jsp?u=' + u;
             window.location = s;

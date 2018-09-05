@@ -51,11 +51,13 @@
         <p hidden id="user"><%=user%></p>
         <p hidden id="dbName"><%=dbName%></p>
         <%
+            
             //splits the array of answers on ","
             String ans[] = decodedString.split("\",\"");
             if (ans[0].startsWith("\""))
             {
                 ans[0] = ans[0].substring(1);
+                
             }
             if (ans[ans.length - 1].contains("\""))
             {
@@ -105,6 +107,11 @@
 
             for (int i = 0; i < ans.length; i++)
             {
+                ans[i] = ans[i].replace("&gt", ">");
+                ans[i] = ans[i].replace("&lt", "<");
+                ans[i] = ans[i].replace("\\(", "(");
+                ans[i] = ans[i].replace("\\)", ")");
+                ans[i] = ans[i].replace("\\'", "'");
                 given.add(ans[i]);
             }
             for (Integer number : x)
@@ -135,9 +142,9 @@
             {
 
                 String give = given.get(count);
-                give = give.replace("'", "\\'");
+                give = give.replace("'", "\'");
                 give = give.replace("\"", "\\\"");
-
+             
                 String n = "UPDATE `" + name + "` SET `studentAnswer` = \"" + give + "\", `studentMarks` = '" + studentMarks.get(count) + "' WHERE (`questionReference` = '" + elem + "');";
 
                 statement.addBatch(n);
@@ -158,10 +165,11 @@
             statement.addBatch("use `marks`;");
             statement.executeBatch();
 
-            String m = "SELECT attemptsLeft FROM `" + assessment + "` WHERE studentNumber = '" + user + "';";
+            String m = "SELECT attemptsLeft, marks FROM `" + assessment + "` WHERE studentNumber = '" + user + "';";
             ResultSet r = statement.executeQuery(m);
             r.next();
             int attemptsLeft = Integer.parseInt(r.getString("attemptsLeft"));
+            int prevMarks = Integer.parseInt(r.getString("marks"));
 
             //decrements marks left
             if (attemptsLeft != 0)
@@ -176,9 +184,14 @@
             //updates mark table
             String up = "UPDATE `" + assessment + "` SET `attemptsLeft` = '" + attemptsLeft + "' WHERE (`studentNumber` = '" + user + "');";
             statement.addBatch(up);
-            up = "UPDATE `" + assessment + "` SET `marks` = '" + totMarks + "' WHERE (`studentNumber` = '" + user + "');";
-            statement.addBatch(up);
             statement.executeBatch();
+
+            if (prevMarks < totMarks)
+            {
+                up = "UPDATE `" + assessment + "` SET `marks` = '" + totMarks + "' WHERE (`studentNumber` = '" + user + "');";
+                statement.addBatch(up);
+                statement.executeBatch();
+            }
         %>
     </body>
 </html>

@@ -49,10 +49,10 @@
                             <br>
                             <%--tabs--%>
                             <div class="tab">
-                                <button id="student_overview" class="tablinks" onclick="openTab(event, 'Assessments')" id="defaultOpen">
+                                <button id="assessments" class="tablinks" onclick="openTab(event, 'Assessments')" id="defaultOpen">
                                     Assessments
                                 </button>
-                                <button id="remove_student" class="tablinks" onclick="openTab(event, 'Marks')">
+                                <button id="grades" class="tablinks" onclick="openTab(event, 'Marks')">
                                     My Grades
                                 </button>
                             </div>
@@ -92,7 +92,7 @@
                                         //initiates connection with the MySQL database
                                         Connection connection = new SQL().getConnection();
                                         Statement statement = connection.createStatement();
-
+                                        
                                         statement.addBatch("use `sqlautomarker`;");
                                         statement.executeBatch();
 
@@ -106,20 +106,20 @@
                                             //fetches parameters
                                             String name = rs.getString("assessment_name");
                                             String type = rs.getString("assessment_type");
-
+                                            
                                             String startDate = rs.getString("start_date");
                                             String startTime = rs.getString("start_time");
                                             String start = startDate + " " + startTime;
-
+                                            
                                             String endDate = rs.getString("end_date");
                                             String endTime = rs.getString("end_time");
                                             String end = endDate + " " + endTime;
-
+                                            
                                             String questions = rs.getString("total_questions");
                                             String marks = rs.getString("total_marks");
-
+                                            
                                             int totAttempts = Integer.parseInt(rs.getString("attempts"));
-
+                                            
                                             Statement statement2 = connection.createStatement();
                                             statement2.addBatch("use `marks`;");
                                             statement2.executeBatch();
@@ -127,12 +127,12 @@
                                             //fetches information on the assessment and the user from the marks table
                                             String sql = "SELECT attemptsLeft, marks FROM `" + name + "` WHERE studentNumber ='" + user + "'";
                                             ResultSet rn = statement2.executeQuery(sql);
-
+                                            
                                             int attemptsLeft = 0;
                                             int mark = 0;
                                             rn.next();
                                             attemptsLeft = Integer.parseInt(rn.getString("attemptsLeft"));
-
+                                            
                                             String s = rn.getString("marks");
                                             //if the assessment has not been attempted yet
                                             if (s == null)
@@ -143,7 +143,15 @@
                                             {
                                                 mark = Integer.parseInt(s);
                                             }
+                                            
+                                            String endD = endDate + "T" + endTime + "Z";
                                     %>
+
+                                    <%--hidden variables--%>
+                                    <p hidden id="<%="totAttempts " + x%>"><%=totAttempts%></p>
+                                    <p hidden id="<%="attemptsLeft " + x%>"><%=attemptsLeft%></p>
+                                    <p hidden id="<%="endDate " + x%>"><%=endDate + "T" + endTime + "+02:00"%></p>
+                                    <p hidden id="<%="startDate " + x%>"><%=startDate + "T" + startTime + "+02:00"%></p>
                                     <tr>
                                         <td style="font-size: small;" name="name" id="name">
                                             <%=name%>
@@ -170,15 +178,11 @@
                                             <%=mark%>
                                         </td>
                                         <td style="font-size: small;">
-                                            <a id="ref-<%=x%>"  href="JavaScript:newTab('<%=name%>', '<%=user%>','<%=attemptsLeft%>', '<%=totAttempts%>');">
+                                            <a id="ref-<%=x%>"  href="JavaScript:newTab('<%=name%>', '<%=user%>','<%=attemptsLeft%>', '<%=totAttempts%>', '<%="endDate " + x%>');">
                                                 Begin
                                             </a>
                                         </td>
 
-                                        <%--hidden variables--%>
-                                    <p hidden id="<%="attemptsLeft " + x%>"><%=attemptsLeft%></p>
-                                    <p hidden id="<%="endDate " + x%>"><%=endDate + "T" + endTime + "Z"%></p>
-                                    <p hidden id="<%="startDate " + x%>"><%=startDate + "T" + startTime + "Z"%></p>
                                     </tr>
                                     <%
                                             x++;
@@ -199,7 +203,7 @@
                                         <td>
                                         </td>
                                     </tr>
-                                    <%
+                                    <%    
                                         statement.addBatch("use `marks`;");
                                         statement.executeBatch();
 
@@ -215,7 +219,7 @@
                                             //fetches the assessment marks of the user from the database and tables
                                             String sql = "SELECT marks FROM `" + name + "` WHERE studentNumber ='" + user + "'";
                                             Statement s2 = connection.createStatement();
-
+                                            
                                             ResultSet rn = s2.executeQuery(sql);
                                             rn.next();
 
@@ -231,9 +235,9 @@
                                             {
                                                 mark = Integer.parseInt(s);
                                             }
-
+                                            
                                             Statement s3 = connection.createStatement();
-
+                                            
                                             rn = s3.executeQuery("SELECT question_database, total_marks FROM `sqlautomarker`.`assessments` WHERE assessment_name ='" + name + "';");
                                             rn.next();
                                             String db = rn.getString("question_database");
@@ -262,7 +266,7 @@
                             </div>
                         </div>
                         <script>
-
+                            
                             /**
                              * when the document loads
                              * @type type
@@ -271,7 +275,7 @@
                             {
                                 var x = <%=x%>;
                                 var today = new Date();
-
+                                
                                 //traverses the assessments
                                 for (var i = 0; i < x; i++)
                                 {
@@ -283,36 +287,41 @@
                                     var eDate = document.getElementById(y1).innerHTML;
                                     var start = new Date(sDate);
                                     var end = new Date(eDate);
-
+                                    
                                     //fetches the number of attempts left
                                     var attempts = document.getElementById("attemptsLeft " + v).innerHTML;
-
+                                    var totAttempts = document.getElementById("totAttempts " + v).innerHTML;
                                     //if there are no more attempts left, disable the link
                                     if (attempts == 0)
                                     {
                                         document.getElementById("ref-" + v).innerHTML = "Closed";
                                         document.getElementById("ref-" + v).removeAttribute('href');
                                     }
-
+                                    
+                                    if (totAttempts == attempts)
+                                    {
+                                        document.getElementById("mark-" + v).innerHTML = "Not Available";
+                                        document.getElementById("mark-" + v).removeAttribute('href');
+                                    }
                                     //if the current date is greater than the assessment's close date, disable the link
                                     if (end < today)
                                     {
                                         document.getElementById("ref-" + v).innerHTML = "Closed";
                                         document.getElementById("ref-" + v).removeAttribute('href');
                                     }
-
+                                    
                                     //if the start link is greater than today's date, disable the link
                                     if (start > today)
                                     {
-                                        document.getElementById("ref-" + v).innerHTML = "Closed";
+                                        document.getElementById("ref-" + v).innerHTML = "Not available";
                                         document.getElementById("ref-" + v).removeAttribute('href');
                                     }
                                 }
-                                //opens the assessment
+                                //opens the assessment tab
                                 openTab(event, 'Assessments');
                             });
-
-
+                            
+                            
                             /**
                              * redirects to the result's page
                              * 
@@ -328,11 +337,11 @@
                                 var a = btoa(name);
                                 var u = btoa(user);
                                 var url = "resultsPage.jsp?a=" + a + "&u=" + u + "&db=" + db;
-
+                                
                                 //redirect
                                 window.location = url;
                             }
-
+                            
                             /**
                              * opens the selected tab
                              * 
@@ -343,34 +352,34 @@
                             function openTab(evt, TabName)
                             {
                                 var i, tabcontent, tablinks;
-
+                                
                                 //fetches tab content
                                 tabcontent = document.getElementsByClassName("tabcontent");
-
+                                
                                 //traverses tabs
                                 for (i = 0; i < tabcontent.length; i++)
                                 {
                                     //hides all tabs
                                     tabcontent[i].style.display = "none";
                                 }
-
+                                
                                 //fetches tab links
                                 tablinks = document.getElementsByClassName("tablinks");
-
+                                
                                 //traverse tab links                        
                                 for (i = 0; i < tablinks.length; i++)
                                 {
                                     //deactivate tab
                                     tablinks[i].className = tablinks[i].className.replace(" active", "");
                                 }
-
+                                
                                 //display tab
                                 document.getElementById(TabName).style.display = "block";
-
+                                
                                 //activate tab
                                 evt.currentTarget.className += " active";
                             }
-
+                            
                             /**
                              * opens the assessment in a new tab for the student to complete
                              * 
@@ -380,47 +389,48 @@
                              * @param {type} totAttempt number of attempts allowed
                              * @returns {undefined} assessment page
                              */
-                            function newTab(name, user, left, totAttempt)
+                            function newTab(name, user, totAttempt, left, endDate)
                             {
-
+                                
                                 var url;
-                                var l = left;
                                 var at = totAttempt;
-
+                                var l = left;
+                                var endD = document.getElementById(endDate).innerHTML;
                                 //if it is the student's first try
+                                
                                 if (l == at)
                                 {
                                     //encrypt data
-                                    var attempt = btoa(left);
+                                    var attempt = btoa(at);
                                     var a = btoa(name);
                                     var u = btoa(user);
-
+                                    var e = btoa(endD);
+                                    
                                     //build url
-                                    url = "studentAnswers.jsp?assessment=" + a + "&user=" + u + "&attempt=" + attempt;
-
-                                    //opens url in a new tab
-                                    popupWindow = window.open(url);
+                                    url = "studentAnswers.jsp?assessment=" + a + "&user=" + u + "&attempt=" + attempt + "&ed=" + e;
+                                    
+                                    //opens url 
+                                    window.location = url;
                                 }
-
-                                //if this is not the first attemot
-                                if (l < at)
+                                else
                                 {
                                     //prompt the user
                                     var c = confirm('Are you sure you would like to retry the assignment?\nYour current mark will be erased');
-
+                                    
                                     //if the user selects yes 
                                     if (c == true)
                                     {
                                         //encrypt data
-                                        var attempt = btoa(left);
+                                        var attempt = btoa(at);
                                         var a = btoa(name);
                                         var u = btoa(user);
-
+                                        var e = btoa(endD);
+                                        
                                         //build url
-                                        url = "studentAnswers.jsp?assessment=" + a + "&user=" + u + "&attempt=" + attempt;
-
-                                        //opens url in a new tab 
-                                        popupWindow = window.open(url);
+                                        url = "studentAnswers.jsp?assessment=" + a + "&user=" + u + "&attempt=" + attempt + "&ed=" + e;
+                                        
+                                        //opens url 
+                                        window.location = url;
                                     }
                                 }
                             }

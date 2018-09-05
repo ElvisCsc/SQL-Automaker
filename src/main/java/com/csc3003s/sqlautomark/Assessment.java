@@ -387,7 +387,7 @@ public class Assessment
             String create = "CREATE TABLE `marks`.`" + this.name + "` ("
                     + "  `studentNumber` VARCHAR(9) NOT NULL,"
                     + "  `attemptsLeft` INT NOT NULL,"
-                    + "  `marks` double DEFAULT NULL,"
+                    + "  `marks` double DEFAULT 0,"
                     + "  PRIMARY KEY (`studentNumber`));";
 
             statement.addBatch(create);

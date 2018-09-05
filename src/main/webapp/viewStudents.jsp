@@ -36,7 +36,7 @@
                             <div class="col-md-12">
                                 <center>
                                     <h2>
-                                        Students
+                                        Users
                                     </h2>
                                 </center>
                                 <center>

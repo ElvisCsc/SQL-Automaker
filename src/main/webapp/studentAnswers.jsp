@@ -29,15 +29,18 @@
                         String a = request.getParameter("assessment");
                         String u = request.getParameter("user");
                         String at = request.getParameter("attempt");
+                        String e = request.getParameter("ed");
 
                         //decodes the strings
                         Decoder decoder = Base64.getDecoder();
                         byte[] as = decoder.decode(a);
                         byte[] us = decoder.decode(u);
                         byte[] att = decoder.decode(at);
+                        byte[] ed = decoder.decode(e);
                         String assessment = new String(as);
                         String user = new String(us);
                         String attempt = new String(att);
+                        String endDate = new String(ed);
 
                         ArrayList<Question> questions = new ArrayList<Question>();
 
@@ -63,7 +66,8 @@
 
                         int intAttempt = Integer.parseInt(attempt);
                         int intAttempts = Integer.parseInt(attempts);
-
+                        System.out.println("attemt "+attempt);
+                        System.out.println("out of "+ attempts);
                         //if the current attempt is less than the number of attempts allowed
                         if (intAttempt < intAttempts)
                         {
@@ -94,6 +98,7 @@
                     <%--creates hidden variables--%>
                     <p hidden id="user"><%=user%></p>
                     <p hidden id="assessmet"><%=assessment%></p>
+                    <p hidden id="eD"><%=endDate%></p>
                     <%
                         //fetches all questions from the database
                         ResultSet qrs = statement.executeQuery("SELECT * FROM questions;");
@@ -427,7 +432,9 @@
                 var res = s.replace(/\(/g, "\\(");
                 var res2 = res.replace(/\)/g, "\\)");
                 var res3 = res2.replace(/'/g, "\\'");
-                arr[i - 1] = "\"" + s + "\"";
+                var res4 = res3.replace(/</g,"&lt");
+                var res5 = res4.replace(/>/g,"&gt");
+                arr[i - 1] = "\"" + res5 + "\"";
             }
 
             //fetches relevant elements
@@ -449,8 +456,24 @@
             var url = "markAssessment.jsp?set=" + data + "&db=" + database + "&qs=" + q + "&a=" + assessment + "&u=" + user + "&attempt=" + a;
             var nURL = btoa(url)
 
-            //sends url to mark handler
-            mark("markLoading.jsp?redir=" + nURL);
+
+            var eDate = document.getElementById("eD").innerHTML;
+
+            //fetches date
+            var now = new Date();
+            var end = new Date(eDate);
+
+            if (end < now)
+            {
+                alert('Assessment has closed');
+            }
+            else
+            {
+                //  sends url to mark handler
+                mark("markLoading.jsp?redir=" + nURL);
+            }
+
+
         }
 
         /**

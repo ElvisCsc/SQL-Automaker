@@ -18,7 +18,7 @@
 <%@ page import="org.apache.commons.fileupload.servlet.*" %>
 <%@ page import="org.apache.commons.io.output.*" %>
 <html>
-    <body onload="Close()">
+    <body >
         <%
             File file = null;
             int maximumFileSize = 5000 * 1024;
@@ -54,17 +54,44 @@
                         }
                     }
                     CreateStudents c = new CreateStudents(file);
-                }
-                catch (Exception ex)
-                {
-                    System.out.println(ex);
-                }
+                    boolean isValid = c.isValid();
+
+                    if (isValid == true)
+                    {
+        %>
+        <script>
+            alert('File Upload Successful');
+            window.history.back();
+        </script>
+        <%
             }
-            else
+            if (isValid == false)
             {
         %>
         <script>
+            alert('File format error, please read documentation on how file must be formatted.');
+            window.history.back();
+        </script>
+        <%
+            }
+
+        }
+        catch (Exception ex)
+        {
+        %>
+        <script>
+            alert('File Upload Error\n'<%=ex%>);
+            window.history.back();
+        </script>
+        <%
+            }
+        }
+        else
+        {
+        %>
+        <script>
             alert('Error in file upload');
+            window.history.back();
         </script>
         <%
             }
@@ -78,7 +105,7 @@
         function Close()
         {
             alert("Students successfully added");
-            window.close();
+            window.history.back();
         }
     </script>
 </html>

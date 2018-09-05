@@ -92,7 +92,7 @@
                                 Attempts
                             </td>
                             <td>
-                                <input class="cat" id="attempts" name="attempts" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()">
+                                <input class="cat" id="attempts" name="attempts" TYPE="NUMBER" MIN="1" MAX="10" STEP="1" VALUE="1" SIZE="6" onchange="update()">
                             </td> 
                         </tr>
                     </table>
@@ -241,7 +241,7 @@
         function home()
         {
             var url = "teacherPortal.jsp?";
-            window.location = url;
+            window.history.back();
         }
 
         /**
@@ -275,7 +275,7 @@
         function update()
         {
             var tot, cats, catA, catB, catC, catD, catE, catF, catG, label, totMarks, marksA, marksB, marksC, marksD, marksE, marksF, marksG, attempts, labelMarks;
-            
+
             //fetches the data
             label = document.getElementById("numQuestions");
             cats = document.getElementsByClassName("cat");
@@ -288,27 +288,27 @@
             catF = document.getElementById("catF").valueOf();
             catG = document.getElementById("catG").valueOf();
             attempts = document.getElementById("attempts").valueOf();
-            
+
             //sets the information
             tot = Number(catA.value) + Number(catB.value) + Number(catC.value) + Number(catD.value) + Number(catE.value) + Number(catF.value) + Number(catG.value);
             label.value = tot.valueOf();
             totMarks = Number(2 * catA.value) + Number(2 * catB.value) + Number(3 * catC.value) + Number(3 * catD.value) + Number(4 * catE.value) + Number(4 * catF.value) + Number(5 * catG.value);
             labelMarks.value = totMarks.valueOf();
         }
-        
+
         /**
          * enures that the information provided is correct
          * @returns {undefined}
          */
         function validate()
         {
-            
+
             //fetches information
             var name = document.getElementById("assessmentName").value;
             var startDate = document.getElementById("startDate").value;
             var endDate = document.getElementById("endDate").value;
             var proceed = true;
-            
+
             //if the assignment name is empty
             if (name == "")
             {
@@ -317,7 +317,7 @@
                 //sets proceed to false
                 proceed = false;
             }
-            
+
             //if the starting date of the assignment is after the end date of the assignment
             if (startDate > endDate)
             {
@@ -326,7 +326,7 @@
                 //sets proceed to false
                 proceed = false;
             }
-            
+
             //if proceed is true, create the assessment
             if (proceed == true)
             {
@@ -361,11 +361,19 @@
             endDate = document.getElementById("endDate").value;
             endTime = document.getElementById("endTime").value;
 
-            //creates redirect link
-            var s = "createAssessmentLoading.jsp?n=" + btoa(assessmentName) + "&t=" + btoa(assessmentType) + "&db=" + btoa(selectDatabase) + "&nQ=" + btoa(numQuestions) + "&tM=" + btoa(totMarks) + "&cA=" + btoa(catA) + "&cB=" + btoa(catB) + "&cC=" + btoa(catC) + "&cD=" + btoa(catD) + "&cE=" + btoa(catE) + "&cF=" + btoa(catF) + "&cG=" + btoa(catG) + "&at=" + btoa(attempts) + "&sD=" + btoa(startDate) + "&sT=" + btoa(startTime) + "&eD=" + btoa(endDate) + "&eT=" + btoa(endTime);
+            if (totMarks == 0)
+            {
+                alert('Assessment has to have at least one question');
+            }
+            else
+            {
+                //creates redirect link
+                var s = "createAssessmentLoading.jsp?n=" + btoa(assessmentName) + "&t=" + btoa(assessmentType) + "&db=" + btoa(selectDatabase) + "&nQ=" + btoa(numQuestions) + "&tM=" + btoa(totMarks) + "&cA=" + btoa(catA) + "&cB=" + btoa(catB) + "&cC=" + btoa(catC) + "&cD=" + btoa(catD) + "&cE=" + btoa(catE) + "&cF=" + btoa(catF) + "&cG=" + btoa(catG) + "&at=" + btoa(attempts) + "&sD=" + btoa(startDate) + "&sT=" + btoa(startTime) + "&eD=" + btoa(endDate) + "&eT=" + btoa(endTime);
+                //redirects to the assessment handling page
+                window.location = s;
+            }
 
-            //redirects to the assessment handling page
-            window.location = s;
+
         }
     </script>
 </html>
