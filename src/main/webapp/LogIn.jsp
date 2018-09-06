@@ -1,7 +1,7 @@
 <%-- 
     Document   : LogIn Class - Displays the log in screen to the user
     Created on : 02 Aug 2018, 4:21:43 PM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="com.csc3003s.sqlautomark.*"%>

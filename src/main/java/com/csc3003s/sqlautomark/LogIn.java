@@ -7,20 +7,23 @@ import java.sql.*;
  * Log in class that accesses the MySQL database to validate a user when logging
  * into the portal
  *
- * @version 2 September 2018
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class LogIn
 {
 
     private final String username;
     private final String password;
+
+    //role of user 
     private int role;
 
     /**
      * Constructor method
      *
-     * @param username Username of Student or Lecturer
+     * @param username Username of Student, Lecturer, or Tutor
      * @param password Password of user
      */
     public LogIn(String username, String password)
@@ -40,10 +43,8 @@ public class LogIn
      */
     public int LogInUser()
     {
-
         try
         {
-
             //initiate connection to the database
             Connection connection = new SQL().getConnection();
             Statement stmt = connection.createStatement();

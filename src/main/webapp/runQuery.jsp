@@ -1,7 +1,7 @@
 <%-- 
     Document   : Runs a query for the student to check his/her statement
     Created on : 16 Aug 2018, 12:08:31 PM
-    Author     : Zach
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.util.*"%>

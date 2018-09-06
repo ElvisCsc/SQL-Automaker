@@ -6,16 +6,24 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Adds students from file to database
+ * Adds students from a file to the MySQL database
  *
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class CreateStudents
 {
-
+    //file of students
     private File students;
+    
+    //connection to the MySQL database
     private Connection connection;
+    
+    //list of users
     private ArrayList<User> users;
+    
+    //boolean to determine if the file is valid or not.
     private boolean isValid;
 
     /**
@@ -32,7 +40,6 @@ public class CreateStudents
         this.users = new ArrayList<User>();
         this.isValid = true;
         readFile();
-
     }
 
     /**
@@ -42,7 +49,6 @@ public class CreateStudents
     {
         try
         {
-
             Statement stmt = connection.createStatement();
             Statement statement = connection.createStatement();
             String sql = "";
@@ -75,7 +81,7 @@ public class CreateStudents
     /**
      * Checks if the file format is valid
      *
-     * @return
+     * @return (in)valid file
      */
     public boolean isValid()
     {

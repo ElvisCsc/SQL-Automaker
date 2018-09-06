@@ -1,7 +1,7 @@
 <%-- 
     Document   : Interface for a Lecturer or a Tutor to create an assessment for the students
     Created on : 12 Aug 2018, 4:08:51 PM
-    Author     : Zach
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.sql.ResultSet"%>
@@ -30,7 +30,6 @@
                     </center>
                     <br>
                     <br>
-
                     <%--Creates table to handle UI layout--%>
                     <table id="t01">
                         <tr>
@@ -302,7 +301,6 @@
          */
         function validate()
         {
-
             //fetches information
             var name = document.getElementById("assessmentName").value;
             var startDate = document.getElementById("startDate").value;

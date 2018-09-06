@@ -1,9 +1,11 @@
 package com.csc3003s.sqlautomark;
 
 /**
- * Question class
+ * Question class. Handles questions that have been fetched from the database.
  *
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class Question
 {

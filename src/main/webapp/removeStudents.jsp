@@ -1,7 +1,7 @@
 <%-- 
     Document   : Removes all students from the database
     Created on : 01 Sep 2018, 4:21:58 PM
-    Author     : Zach
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="com.csc3003s.sqlautomark.*"%>

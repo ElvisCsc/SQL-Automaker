@@ -1,7 +1,7 @@
 <%-- 
     Document   : Front-Facing user interface for a staff member or a tutor
     Created on : 08 Aug 2018, 8:08:08 PM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.sql.*"%>
@@ -566,7 +566,7 @@
             }
 
             /**
-             * checks whether a file has been selected
+             * checks whether a file has been selected. if no file has been selecten
              * @returns valid file
              */
             function submit()

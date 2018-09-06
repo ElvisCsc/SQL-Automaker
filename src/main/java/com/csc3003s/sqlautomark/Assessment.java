@@ -9,6 +9,8 @@ import java.util.*;
  * of questions
  *
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class Assessment
 {
@@ -103,7 +105,6 @@ public class Assessment
     {
         try
         {
-
             Statement statement = connection.createStatement();
             statement.addBatch("use `" + database + "`;");
             statement.executeBatch();
@@ -375,7 +376,6 @@ public class Assessment
      */
     public void createSummary()
     {
-
         try
         {
             Statement statement = connection.createStatement();
@@ -551,7 +551,6 @@ public class Assessment
             //if there are questions from category B
             if (b != 0)
             {
-
                 //fetches random questions from the category
                 String catB = "SELECT questionNumber FROM questions WHERE category='B'"
                         + "ORDER BY RAND()"
@@ -569,7 +568,6 @@ public class Assessment
             //if there are questions from category C
             if (c != 0)
             {
-
                 //fetches random questions from the category
                 String catC = "SELECT questionNumber FROM questions WHERE category='C'"
                         + "ORDER BY RAND()"
@@ -587,7 +585,6 @@ public class Assessment
             //if there are questions from category D
             if (d != 0)
             {
-
                 //fetches random questions from the category
                 String catD = "SELECT questionNumber FROM questions WHERE category='D'"
                         + "ORDER BY RAND()"
@@ -605,7 +602,6 @@ public class Assessment
             //if there are questions from category E
             if (e != 0)
             {
-
                 //fetches random questions from the category
                 String catE = "SELECT questionNumber FROM questions WHERE category='E'"
                         + "ORDER BY RAND()"
@@ -623,7 +619,6 @@ public class Assessment
             //if there are questions from category F
             if (f != 0)
             {
-
                 //fetches random questions from the category
                 String catF = "SELECT questionNumber FROM questions WHERE category='F'"
                         + "ORDER BY RAND()"
@@ -641,7 +636,6 @@ public class Assessment
             //if there are questions from category G
             if (g != 0)
             {
-
                 //fetches random questions from the category
                 String catG = "SELECT questionNumber FROM questions WHERE category='G'"
                         + "ORDER BY RAND()"
@@ -728,13 +722,11 @@ public class Assessment
             }
 
             statement2.executeBatch();
-
         }
         catch (Exception e)
         {
             System.out.println(e);
         }
-
     }
 
     /**
@@ -742,7 +734,6 @@ public class Assessment
      */
     public void createAssessment()
     {
-
         try
         {
             Connection connection = new SQL().getConnection();

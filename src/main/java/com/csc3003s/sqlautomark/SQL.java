@@ -3,13 +3,13 @@ package com.csc3003s.sqlautomark;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * Facilitates connection with MySQL database
+ * Facilitates connection with the MySQL database
  *
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class SQL
 {
@@ -17,7 +17,7 @@ public class SQL
     Connection connection = null;
 
     /**
-     * Constructor method
+     * Constructor method that initiates a connection with the database
      */
     public SQL()
     {
@@ -34,7 +34,7 @@ public class SQL
     /**
      * fetches connection
      *
-     * @return connection
+     * @return connection to the database
      */
     public Connection getConnection()
     {

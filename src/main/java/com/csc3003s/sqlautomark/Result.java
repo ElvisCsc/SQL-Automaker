@@ -4,15 +4,28 @@ package com.csc3003s.sqlautomark;
  * Result class
  *
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class Result
 {
 
+    //the question number
     private int questionID;
+    
+    //the actual question
     private String question;
+    
+    //the student's answer
     private String studentAnswer;
+    
+    //the expected answer
     private String expectedAnswer;
+    
+    //the marks achieved by the student for the question
     private int studentMarks;
+    
+    //the marks that the question is worth
     private int outOf;
 
     /**

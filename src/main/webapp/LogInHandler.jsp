@@ -1,7 +1,7 @@
 <%-- 
     Document   : LogInHandler - Handles the validation and redirection of the user log in
     Created on : 01 Sep 2018, 11:05:01 AM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="com.csc3003s.sqlautomark.*"%>

@@ -1,7 +1,7 @@
 <%-- 
     Document   : Displays the mark breakdown of an assessment. It displays the student numbers and their marks for the assignment. 
     Created on : 08 Aug 2018, 8:08:08 PM
-    Author     : Zach
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.util.Base64.*"%>
@@ -116,8 +116,6 @@
                         {
                             window.history.back();
                         }
-
-
                         /**
                          * Downloads the csv file
                          * @param {type} csv document type

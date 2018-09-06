@@ -3,18 +3,31 @@ package com.csc3003s.sqlautomark;
 import java.sql.*;
 
 /**
- * Marks individual questions
+ * Marks individual questions against the expected answer from the database.
  *
  * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class MarkQuestion
 {
 
+    //connection to the database
     private Connection connection;
+
+    //name of the database being accessed
     private String database;
+
+    //marks available for the question
     private int mark;
+
+    //expected answer
     private String expected;
+
+    //answer provided by student
     private String actual;
+
+    //category of question
     private String category;
 
     /**
@@ -38,9 +51,10 @@ public class MarkQuestion
     }
 
     /**
-     * assigns mark for question
+     * assigns the student's mark for question
      *
-     * @param x case
+     * @param x case for which the mark is assigned. 0 = full marks, 1 = partial
+     * marks, 2 = no marks
      */
     public void assignMark(int x)
     {
@@ -50,11 +64,11 @@ public class MarkQuestion
             case 0:
                 mark = mark;
                 break;
-            //half marks
+            //partial marks
             case 1:
                 mark = (int) mark / 2;
                 break;
-//no marks
+            //no marks
             case 2:
                 mark = 0;
                 break;
@@ -102,7 +116,6 @@ public class MarkQuestion
             }
             catch (SQLException e)
             {
-                System.out.println(e);
                 assignMark(checkHalfMarks());
             }
         }
@@ -110,9 +123,9 @@ public class MarkQuestion
     }
 
     /**
-     * checks if the question answer deserves half marks
+     * checks if the question answer deserves partial marks
      *
-     * @return mark
+     * @return partial marks or no marks
      */
     public int checkHalfMarks()
     {
@@ -169,12 +182,12 @@ public class MarkQuestion
     }
 
     /**
-     * Compares the expected result with the actual result
+     * Compares the expected result with the actual result. If they match, the user receives full marks, if not, the system checks for partial marks. 
      *
-     * @param resultSet1 result set
-     * @param resultSet2 result set
-     * @return mark
-     * @throws SQLException
+     * @param resultSet1 result set of expected answer
+     * @param resultSet2 result set of student answer
+     * @return mark achieved
+     * @throws SQLException error in executing sql statement - checks for half marks
      */
     public int compareResultSets(ResultSet resultSet1, ResultSet resultSet2) throws SQLException
     {

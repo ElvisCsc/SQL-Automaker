@@ -1,7 +1,7 @@
 <%-- 
     Document   : Creates an assessment using the information from the UI
     Created on : 16 Aug 2018, 10:42:11 PM
-    Author     : Zach
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="com.csc3003s.sqlautomark.*"%>

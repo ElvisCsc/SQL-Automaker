@@ -5,7 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 
 /**
- * would be used to read data from database file
+ * would be used to read data from database file -- INCOMPLETE. THIS WOULD BE
+ * USED FOR ANOTHER STAGE OF THE DEVELOPMENT AND EXPANSION OF THE PROJECT
  *
  * @author MLTZAC001
  */
@@ -15,7 +16,7 @@ public class ReadNewData
     /**
      * Constructor
      *
-     * @param file file
+     * @param file file to be read
      */
     public ReadNewData(File file)
     {

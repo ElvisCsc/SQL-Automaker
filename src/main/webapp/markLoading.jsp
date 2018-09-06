@@ -1,7 +1,7 @@
 <%-- 
     Document   : Facilitates the marking of an assessment by moving the data from the UI to the Java class
     Created on : 16 Aug 2018, 10:42:11 PM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="com.csc3003s.sqlautomark.*"%>

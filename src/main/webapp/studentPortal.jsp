@@ -1,7 +1,7 @@
 <%-- 
     Document   : Front-Facing UI for the student
     Created on : 08 Aug 2018, 8:08:08 PM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.util.Base64.Decoder"%>
@@ -146,7 +146,6 @@
                                             
                                             String endD = endDate + "T" + endTime + "Z";
                                     %>
-
                                     <%--hidden variables--%>
                                     <p hidden id="<%="totAttempts " + x%>"><%=totAttempts%></p>
                                     <p hidden id="<%="attemptsLeft " + x%>"><%=attemptsLeft%></p>
@@ -266,10 +265,9 @@
                             </div>
                         </div>
                         <script>
-                            
                             /**
                              * when the document loads
-                             * @type type
+                             * @type DOM content loaded
                              */
                             window.addEventListener('DOMContentLoaded', function ()
                             {

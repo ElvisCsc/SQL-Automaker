@@ -3,21 +3,29 @@ package com.csc3003s.sqlautomark;
 import java.sql.*;
 
 /**
- * Class to handle users
+ * Class to handle user creation 
  *
- * @author Zach
+ * @author MLTZAC001
+ * @author SBTELV001
+ * @author TSHRIA002
  */
 public class User
 {
 
+    
+    //name of user
     private String name;
+    
+    //student or staff number
     private String userID;
+    
+    //role of user: lecturer, tutor, or student
     private String role;
 
     /**
      * fetches user's name
      *
-     * @return name
+     * @return name of user
      */
     public String getName()
     {
@@ -37,7 +45,7 @@ public class User
     /**
      * fetches role of user
      *
-     * @return role
+     * @return role of the user
      */
     public String getRole()
     {
@@ -47,9 +55,9 @@ public class User
     /**
      * Constructor method
      *
-     * @param name name
-     * @param userID user ID
-     * @param role role
+     * @param name name of the user
+     * @param userID user ID 
+     * @param role role of the user
      */
     public User(String name, String userID, String role)
     {

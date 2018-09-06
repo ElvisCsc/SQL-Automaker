@@ -1,7 +1,7 @@
 <%-- 
-    Document   : Views the users
+    Document   : Views the users existing in the database
     Created on : 08 Aug 2018, 8:08:08 PM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.sql.*"%>

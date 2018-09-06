@@ -66,8 +66,7 @@
 
                         int intAttempt = Integer.parseInt(attempt);
                         int intAttempts = Integer.parseInt(attempts);
-                        System.out.println("attemt "+attempt);
-                        System.out.println("out of "+ attempts);
+                        
                         //if the current attempt is less than the number of attempts allowed
                         if (intAttempt < intAttempts)
                         {
@@ -321,7 +320,6 @@
         var slideIndex = 1;
         showSlides(slideIndex);
 
-
         /**
          * increases the slide to the next one
          * @param {type} n slide number 
@@ -341,7 +339,6 @@
         {
             showSlides(slideIndex = n);
         }
-
 
         /**
          * displays a question slide
@@ -401,7 +398,6 @@
             runQuery(url);
         }
 
-
         /**
          * creates a popup to run the query 
          * @param {type} text url of the query
@@ -412,7 +408,6 @@
             popupWindow = window.open(
                     text, 'popUpWindow', 'height=600,width=700,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes')
         }
-
 
         /**
          * submits the assignment
@@ -472,8 +467,6 @@
                 //  sends url to mark handler
                 mark("markLoading.jsp?redir=" + nURL);
             }
-
-
         }
 
         /**

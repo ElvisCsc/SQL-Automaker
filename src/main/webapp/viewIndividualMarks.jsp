@@ -1,7 +1,7 @@
 <%-- 
-    Document   : teacher_portal
+    Document   : View Individual Marks Interface
     Created on : 08 Aug 2018, 8:08:08 PM
-    Author     : MLTZAC001
+    Author     : MLTZAC001, SBTELV001, TSHRIA002
 --%>
 
 <%@page import="java.util.Base64.*"%>
@@ -59,6 +59,7 @@
                         <%=assessment + ": " + name%>
                     </h3>
                     <br>
+                    <%--exports the table on the page to a csv file--%>
                     <center>
                         <a href=" Javascript: exportTableToCSV('<%=name%>_<%=assessment%>.csv');" >Export CSV</a>
                     </center>
@@ -129,7 +130,7 @@
                     </table>
                     <br>   
                     <center>
-                        <button id="b1" class="button" onclick="Javascript: mark()();">
+                        <button id="b1" class="button" onclick="Javascript: mark();">
                             Return to Marks
                         </button>
                     </center>
